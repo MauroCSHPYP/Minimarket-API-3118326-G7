@@ -42,7 +42,8 @@ module.exports = function (conexion) {
             ID_TIPO_DOCUMENTO: req.body.ID_TIPO_DOCUMENTO,
             ID_ROL: req.body.ID_ROL,
             NUMERO_IDENTIFICACION: req.body.NUMERO_IDENTIFICACION,
-            ALIAS: req.body.ALIAS
+            ALIAS: req.body.ALIAS,
+            CONTRASENA: req.body.CONTRASENA
         }
         const insert_sql = 'INSERT INTO usuario SET ?';
         const check_sql = 'SELECT COUNT(1) AS CONTEO FROM usuario WHERE UPPER(TRIM(NUMERO_IDENTIFICACION)) = UPPER(TRIM(?))';
@@ -140,11 +141,12 @@ module.exports = function (conexion) {
             ID_TIPO_DOCUMENTO,
             ID_ROL,
             NUMERO_IDENTIFICACION,
-            ALIAS
+            ALIAS,
+            CONTRASENA
         } = req.body;
 
         // El orden de los placeholders en la SQL debe coincidir con el orden en el array de valores.
-        const update_sql = "UPDATE usuario SET NOMBRE = IFNULL(?, NOMBRE), APELLIDOS = IFNULL(?, APELLIDOS), FECHA_NACIMIENTO = IFNULL(?, FECHA_NACIMIENTO), ID_TIPO_DOCUMENTO = IFNULL(?, ID_TIPO_DOCUMENTO), ID_ROL = IFNULL(?, ID_ROL), NUMERO_IDENTIFICACION = IFNULL(?, NUMERO_IDENTIFICACION), ALIAS = IFNULL(?, ALIAS) WHERE ID_USUARIO = ?";
+        const update_sql = "UPDATE usuario SET NOMBRE = IFNULL(?, NOMBRE), APELLIDOS = IFNULL(?, APELLIDOS), FECHA_NACIMIENTO = IFNULL(?, FECHA_NACIMIENTO), ID_TIPO_DOCUMENTO = IFNULL(?, ID_TIPO_DOCUMENTO), ID_ROL = IFNULL(?, ID_ROL), NUMERO_IDENTIFICACION = IFNULL(?, NUMERO_IDENTIFICACION), ALIAS = IFNULL(?, ALIAS), CONTRASENA = IFNULL(?, CONTRASENA) WHERE ID_USUARIO = ?";
 
         // Array de valores, asegurando el orden correcto de los datos
         const datos = [
@@ -155,6 +157,7 @@ module.exports = function (conexion) {
             ID_ROL,
             NUMERO_IDENTIFICACION,
             ALIAS,
+            CONTRASENA,
             ID_ITEM // El ID es el último valor del WHERE = es la variable constante
         ];
 
