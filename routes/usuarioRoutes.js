@@ -256,5 +256,60 @@ module.exports = function (conexion) {
         });
     });
 
+    // Login - iniciar sesión: 
+    ruta.post('/usuarios/login', (req, res) => {
+
+        const { alias, pass } = req.body;
+
+        if (!alias || !pass) {
+            return res.status(400).json({
+                success: false,
+                message: 'Usuario y contraseña son requeridos.'
+            });
+        }
+
+        const sql = "SELECT NOMBRE, APELLIDOS, ID_ROL, NUMERO_IDENTIFICACION, ALIAS, CONTRASENA FROM usuario WHERE ALIAS = ?";
+        var msg = "";
+
+        conexion.query(sql, [alias], (error, results) => {
+            if (error) {
+                msg = `Error al validar el usuario.`;
+                console.log(msg, error);
+
+                return res.status(500).send({
+                    success: false,
+                    message: msg
+                });
+            }
+
+            if (results.length == 0) {
+                msg = `No se encontró un usuario registrado.`;
+                return res.status(401).send({
+                    success: false,
+                    message: msg
+                });
+            }
+
+            const user_found = results[0];
+
+            if (user_found.CONTRASENA != pass) {
+                msg = `Contraseña incorrecta. Verifique.`;
+                return res.status(401).send({
+                    success: false,
+                    message: msg
+                });
+            }
+
+            delete user_found.CONTRASENA;
+
+            msg = `Inicio de sesión existoso.`;
+            res.status(200).json({
+                success: true,
+                message: msg,
+                user: user_found
+            });
+        })
+    });
+
     return ruta;
 }

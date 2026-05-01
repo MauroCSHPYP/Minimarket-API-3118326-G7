@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página principal - Minimarket</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script type="text/javascript" src="../js/general.js"></script>
+    <script type="text/javascript" src="../js/productos.js"></script>
+    <script type="text/javascript" src="../js/ventas.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</head>
+
+<body>
+    <main class="principal">
+        <header class="encabezado">
+            <img src="../img/image_3.jpg" alt="logo temporal" width="120px" height="80px" title="Logotipo Minimarket" />
+        </header>
+        <div class="topnav" id="myTopnav"></div>
+        <div class="cuerpo">
+            <h1>Minimarket</h1>
+            <h2>Registrar ventas</h2>
+            <form action="">
+                <span id="spn_index_producto" style="display: none;"></span>
+                <span>Buscar producto:</span>
+                <div>
+                    <input type="text" class="input-search-prod" id="txt_nombre_producto"
+                        placeholder="Presione la lupa para buscar un producto" disabled />
+                    <img src="../img/searchicon.png" alt="search" title="Buscar producto"
+                        id="myBtn" />
+                </div>
+                <span>Cantidad:</span>
+                <input type="number" class="input-texto" id="txt_cantidad" min="1" onkeyup="calcular_precio(this)"  oninput="calcular_precio(this)" />
+                <span>Precio ($):</span>
+                <span id="spn_precio_producto" style="display: none;"></span>
+                <input type="number" class="input-texto" id="txt_precio" disabled /><br />
+                <div>
+                    <input type="button" class="boton-agregar" value="Agregar" title="Agregar"
+                        onclick="agregar_producto_a_vender()" />
+                    <input type="button" class="boton-cancelar" value="Cancelar" title="Cancelar"
+                        onclick="cancelar_venta()" />
+                </div>
+            </form>
+            <!-- The Modal -->
+            <div id="myModal" class="modal">
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <span class="close" title="Cerrar">&times;</span>
+                    <div id="div_dynamic_table_productos"></div>
+                </div>
+            </div>
+
+            <br />
+            <div id="div_prods_en_caja"></div>
+            <p class="texto parrafo">
+                Página en construcción - prototipo
+            </p>
+        </div>
+    </main>
+    <footer class="pie">
+        <a href="#" id="link_contacto"></a>
+    </footer>
+    <!-- Fuente: https://stackoverflow.com/a/9899701/4092887 -->
+    <script>
+        (function () {
+            document.getElementById("link_contacto").innerText = "Derechos reservados © (" + new Date().getFullYear() + ") - contáctenos";
+            comprobar_sesion();
+            recargar_tabla_productos();
+            recargar_tabla_prods_en_caja();
+
+            // Source: Code for modal popup - source: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
+
+            // START
+            // Get the modal
+            var modal = document.getElementById("myModal");
+
+            // Get the button that opens the modal
+            var btn = document.getElementById("myBtn");
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks the button, open the modal 
+            btn.onclick = function () {
+                modal.style.display = "block";
+            }
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+            // END
+        })();
+    </script>
+</body>
+
+</html>

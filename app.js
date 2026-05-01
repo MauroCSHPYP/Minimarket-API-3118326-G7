@@ -13,6 +13,7 @@ const ticketRoutes = require('./routes/ticketRoutes');
 
 var app = express();
 app.use(express.json());
+app.use(cors());
 var puerto = 3000;
 
 // Prueba de conexión con servidor local: 

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página principal - Minimarket</title>
+    <!--<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>-->
+    <link rel="stylesheet" href="../css/style.css" />
+    <script type="text/javascript" src="../js/general.js"></script>
+</head>
+
+<body>
+    <main class="principal">
+        <header class="encabezado">
+            <!-- <a href="">Enlace de texto 1</a> -->
+            <img src="../img/image_3.jpg" alt="logo temporal" width="120px" height="80px" title="Logotipo Minimarket" />
+        </header>
+        <div class="cuerpo">
+            <h1>Minimarket</h1>
+            <h2>Iniciar sesión</h2>
+            <form id="loginForm">
+                <input type="text" class="input-texto" id="txt_usuario" placeholder="Ingrese usuario" />
+                <input type="password" class="input-texto" id="txt_contrasena" placeholder="Ingrese contraseña" />
+                <button type="submit" class="boton-enviar" id="btn_ingresar" title="Ingresar">Ingresar</button>
+                <a href="#">Recuperar contraseña</a>
+            </form>
+            <p class="texto parrafo">
+                Bienvenido a la página principal de su aplicación de Minimarket.<br />
+                Aquí podrá iniciar sesión para acceder a las funcionalidades del sistema.<br />
+                Página en construcción - prototipo
+            </p>
+        </div>
+    </main>
+    <footer class="pie">
+        <a href="#" id="link_contacto"></a>
+    </footer>
+    <script type="text/javascript" src="../js/login_script.js"></script>
+    <!-- Fuente: https://stackoverflow.com/a/9899701/4092887 -->
+    <script>
+        (function () {
+            document.getElementById("link_contacto").innerText = "Derechos reservados © (" + new Date().getFullYear() + ") - contáctenos";
+
+            // Validar si sessionStorage se puede usar en el navegador: 
+            // Source: https://www.w3schools.com/html/html5_webstorage.asp
+            const x = document.getElementById("result");
+            if (typeof (Storage) == "undefined") {
+                mostrar_mensaje("Su navegador está desactualizado");
+                document.getElementById("btn_ingresar").style.display = "none";
+            }
+        })();
+    </script>
+</body>
+
+</html>
