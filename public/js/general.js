@@ -10,19 +10,27 @@
  * - Álvaro Fabian Salamanca Sánchez
  */
 
+/** Salto de línea - line break. */
 var text_break_line = "\r\n";
+
+/** Salto de línea - HTML. */
 var html_salto = "<br />";
 
 // sessionStorage.usuario
 // Objeto JSON con los datos del usuario en sesión.
 // Si este valor es null, vacío o undefined, se debe redirigir a la página de iniciar sesión.
 
-// Mostrar alerta.
+/**
+ * 
+ * @param {Mostrar alerta.} mensaje 
+ */
 function mostrar_mensaje(mensaje) {
     alert(mensaje);
 }
 
-// Comprobar si la persona inició sesión.
+/**
+ * Comprobar si la persona inició sesión.
+ */
 function comprobar_sesion() {
 
     var usuario = "";
@@ -43,7 +51,9 @@ function comprobar_sesion() {
     }
 }
 
-// Cerrar sesión.
+/**
+ * Cerrar sesión.
+ */
 function cerrar_sesion() {
     try {
 
@@ -62,7 +72,9 @@ function cerrar_sesion() {
     }
 }
 
-// Crear el menú - según el rol en sesión.
+/**
+ * Crear el menú - según el rol en sesión.
+ */
 function crear_menu() {
 
     var usuario_en_sesion = "";
@@ -107,9 +119,12 @@ function crear_menu() {
     }
 }
 
-// Agregar lista desplegable en el menú.
-// "texto_encabezado" es el texto a mostrar al inicio de la lista desplegable.
-// "opciones_menu" son las opciones - guardadas en un Array - para mostrar las opciones de la lista desplegable.
+/**
+ * Agregar lista desplegable en el menú.
+ * @param {*} texto_encabezado es el texto a mostrar al inicio de la lista desplegable.
+ * @param {*} opciones_menu son las opciones - guardadas en un Array - para mostrar las opciones de la lista desplegable.
+ * @returns 
+ */
 function agregar_lista_en_menu(texto_encabezado, opciones_menu) {
 
     var lista_desplegable = '<div class="dropdown"><button class="dropbtn">{0}{1}</button><div class="dropdown-content">{2}</div></div>';
@@ -147,9 +162,12 @@ function agregar_lista_en_menu(texto_encabezado, opciones_menu) {
     return lista_desplegable;
 }
 
-// Agregar opción de menú.
-// "texto" es el texto y el título a mostrar en la opción/ítem en el menú.
-// "ruta"  es la URL de la opción/ítem en el menú.
+/**
+ * Agregar opción de menú.
+ * @param {string} texto es el texto y el título a mostrar en la opción/ítem en el menú.
+ * @param {string} ruta es la URL de la opción/ítem en el menú.
+ * @returns 
+ */
 function agregar_opcion_menu(texto, ruta) {
 
     var opcion_menu = "<a href='{0}' title='{1}'>{1}</a>";
@@ -181,4 +199,57 @@ function show_responsive_icon() {
     } catch (ex) {
         console.log(ex);
     }
+}
+
+/**
+ * Crear lista desplegable "en campos HTML de tipo (select)".
+ * @param {int} id_select ID del elemento HTML a agregarlos las opciones.
+ * @param {object} options Los elementos/opciones a seleccionar en la lista desplegable.
+ * @param {string} field_id Nombre del campo que contiene el ID del elemento.
+ * @param {string} field_text Nombre del campo que contiene el texto a mostrar en el elemento.
+ */
+function crear_lista_desplegable(id_select, options, field_id, field_text) {
+    try {
+        var select = document.getElementById(id_select);
+        var opt = document.createElement('option');
+        opt.value = 0;
+        opt.innerHTML = "-- Seleccione--";
+        select.innerHTML = "";
+        select.appendChild(opt);
+
+        for (var i = 0; i < options.length; i++) {
+            opt = document.createElement('option');
+            opt.value = options[i][field_id];
+            opt.innerHTML = options[i][field_text];
+            select.appendChild(opt);
+        }
+    } catch (error) {
+        console.log("No se pudo cargar la lista desplegable");
+        console.log(error);
+    }
+}
+
+/**
+ * Establecer la selección en la lista desplegable - según el ID proporcionado.
+ * @param {string} id_select ID de la lista desplegable - que contiene tanto el ID como el NAME para consultar.
+ * @param {string} id_obtained ID a establecer como seleccionado en la lista desplegable.
+ */
+function establecer_seleccion(id_select, id_obtained) {
+    try {
+        document.getElementById(id_select).value = id_obtained;
+    } catch (error) {
+        console.log("No se pudo establecer el campo.");
+        console.log(error);
+    }
+}
+
+/**
+ * Añadir "0" si el número es menor a 10. Esto se usa para ajustar las fechas "manualmente".
+ * Fuente: https://www.w3schools.com/JSREF/tryit.asp?filename=tryjsref_datetime
+ * @param {*} i 
+ * @returns number
+ */
+function addZero(i) {
+  if (i < 10) {i = "0" + i}
+  return i;
 }

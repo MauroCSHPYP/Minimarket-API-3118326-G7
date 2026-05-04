@@ -24,26 +24,29 @@
         <div class="cuerpo">
             <h1>Minimarket</h1>
             <h2>Registrar usuario</h2>
-            <form action="">
+            <form id="frmUsuario">
                 <span id="spn_index_persona" style="display: none;"></span>
-                <span>Primer nombre:</span>
-                <input type="text" class="input-texto" id="txtprim_nombre" /><br />
-                <span>Segundo nombre:</span>
-                <input type="text" class="input-texto" id="txtsegu_nombre" /><br />
-                <span>Primer apellido:</span>
-                <input type="text" class="input-texto" id="txtprim_apellido" /><br />
-                <span>Segundo apellido:</span>
-                <input type="text" class="input-texto" id="txtsegu_apellido" /><br />
+                <span>Nombre(s):</span>
+                <input type="text" class="input-texto" id="txt_nombres" maxlength="100" required /><br />
+                <span>Apellido(s):</span>
+                <input type="text" class="input-texto" id="txt_apellidos" maxlength="100" required /><br />
                 <span>Tipo de documento:</span>
-                <select id="ddlTipoDocumento" class="lista_css">
-                    <option value="0">-- Seleccione--</option>
-                    <option value="1">Cédula de ciudadanía</option>
-                    <option value="2">Pasaporte</option>
-                    <option value="3">Permiso temporal de trabajo (PPT)</option>
-                </select><br />
+                <select id="ddlTipoDocumento" class="lista_css"></select><br />
+                <span>Número de documento:</span>
+                <input type="text" class="input-texto" id="txt_numDoc" maxlength="255" required /><br />
+                <span>Rol:</span>
+                <select id="ddlRol" class="lista_css" onchange="checkFieldsVisibility()"></select><br />
                 <span>Fecha de nacimiento (MM/dd/yyyy):</span>
-                <input type="text" class="input-texto" id="datepicker" /><br />
-                <input type="button" class="boton-enviar" value="Registrar" title="Registrar" onclick="guardar()" />
+                <input type="text" class="input-texto" id="datepicker" maxlength="10" required />
+                <div id="dynamicDiv" class="conditional_div" style="display: none;">
+                    <span id="spn_alias">Alias:</span><br /><br />
+                    <input type="text" class="input-texto" id="txt_alias" maxlength="45" /><br /><br />
+                    <span id="spn_contr">Contraseña:</span><br />
+                    <input type="password" class="input-texto" id="txt_contrasena" maxlength="45" /><br /><br />
+                    <span id="spn_confirm_contr">Confirmar contraseña:</span><br />
+                    <input type="password" class="input-texto" id="txt_confirm_contrasena" maxlength="45" /><br />
+                </div>
+                <button type="submit" class="boton-enviar" id="btn_registrar" title="Guardar cambios">Guardar</button>
             </form>
             <br />
             <div id="div_dynamic_table_personas"></div>
@@ -55,6 +58,7 @@
     <footer class="pie">
         <a href="#" id="link_contacto"></a>
     </footer>
+    <script type="text/javascript" src="../js/usuario_script.js"></script>
     <!-- Fuente: https://stackoverflow.com/a/9899701/4092887 -->
     <script>
         (function () {
@@ -69,8 +73,16 @@
             buttonImageOnly: true,
             buttonText: "Select date"*/
             // Source: https://stackoverflow.com/a/55398081/12511801
-            format: 'dd/MM/yyyy'
+            //format: 'dd/MM/yyyy'
         });
+
+        $("#datepicker").datepicker("option", "dateFormat", "dd/mm/yy");
+
+        function checkFieldsVisibility() {
+            var div = document.getElementById('dynamicDiv');
+            var x = document.getElementById("ddlRol").value;
+            div.style.display = x == 0 ? "none" : "block";
+        }
     </script>
 </body>
 

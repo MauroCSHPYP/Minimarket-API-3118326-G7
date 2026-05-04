@@ -543,3 +543,8 @@ td {
 }
 
 /* FIN - filtro de búsqueda - table. */
+
+/* Usado para ocultar datos. */
+.hdf_data {
+    display: none;
+}

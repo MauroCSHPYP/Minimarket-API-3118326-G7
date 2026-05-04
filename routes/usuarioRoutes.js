@@ -127,7 +127,7 @@ module.exports = function (conexion) {
         })
     });
 
-    // Editar un producto por ID: 
+    // Editar un usuario por ID: 
     ruta.put('/usuarios/:ID', (req, res) => {
 
         const ID_ITEM = req.params.ID;
@@ -186,7 +186,8 @@ module.exports = function (conexion) {
                     conexion.query(update_sql, datos, function (error, resultado) {
 
                         if (error) {
-                            msg = `Error al actualizar usuario con ID # (${ID_ITEM}). `;
+                            //msg = `Error al actualizar usuario con ID # (${ID_ITEM}). `;
+                            msg = `Error al actualizar el usuario. `;
                             console.error(msg, error);
                             res.status(500).send({
                                 message: msg,
@@ -198,12 +199,14 @@ module.exports = function (conexion) {
                         // 2. Validación de Actualización: 
                         if (resultado.affectedRows === 0) {
                             // Error 404: Si la consulta no afectó ninguna fila, el ID no existe.
-                            msg = `No se encontró un usuario con ID # (${ID_ITEM}) para actualizar.`;
+                            //msg = `No se encontró un usuario con ID # (${ID_ITEM}) para actualizar.`;
+                            msg = `No se encontró un usuario para actualizar.`;
                             res.status(404).send({
                                 message: msg
                             });
                         } else {
-                            msg = `Usuario con ID ${ID_ITEM} actualizado correctamente.`
+                            //msg = `Usuario con ID ${ID_ITEM} actualizado correctamente.`
+                            msg = `Usuario actualizado correctamente.`
                             res.status(200).send({
                                 message: msg,
                                 affectedRows: resultado.affectedRows
@@ -232,10 +235,11 @@ module.exports = function (conexion) {
         conexion.query(sql, [ID], function (error, resultado) {
 
             if (error) {
-                msg = `Error al eliminar usuario con ID # ${ID}:`;
+                //msg = `Error al eliminar usuario con ID # ${ID}:`;
+                msg = `Error al eliminar el usuario:`;
                 console.error(msg, error);
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
@@ -243,9 +247,11 @@ module.exports = function (conexion) {
             // Validación de Eliminación
             if (resultado.affectedRows === 0) {
                 // Si no se afectó ninguna fila, el usuario no existe.
-                msg = `No se encontró el usuario con ID ${ID} para eliminar.`;
+                //msg = `No se encontró el usuario con ID ${ID} para eliminar.`;
+                msg = `No se encontró el usuario para eliminar.`;
                 return res.status(404).json({
-                    mensaje: msg
+                    mensaje: msg,
+                    detalleError: error.code
                 });
             }
 
