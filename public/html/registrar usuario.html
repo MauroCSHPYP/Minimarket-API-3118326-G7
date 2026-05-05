@@ -36,7 +36,7 @@
                 <input type="text" class="input-texto" id="txt_numDoc" maxlength="255" required /><br />
                 <span>Rol:</span>
                 <select id="ddlRol" class="lista_css" onchange="checkFieldsVisibility()"></select><br />
-                <span>Fecha de nacimiento (MM/dd/yyyy):</span>
+                <span>Fecha de nacimiento:</span>
                 <input type="text" class="input-texto" id="datepicker" maxlength="10" required />
                 <div id="dynamicDiv" class="conditional_div" style="display: none;">
                     <span id="spn_alias">Alias:</span><br /><br />
@@ -58,6 +58,7 @@
     <footer class="pie">
         <a href="#" id="link_contacto"></a>
     </footer>
+    <script type="text/javascript" src="../js/general.js"></script>
     <script type="text/javascript" src="../js/usuario_script.js"></script>
     <!-- Fuente: https://stackoverflow.com/a/9899701/4092887 -->
     <script>
@@ -66,15 +67,6 @@
             comprobar_sesion();
             recargar_tabla_personas();
         })();
-
-        $("#datepicker").datepicker({
-            /*showOn: "button",
-            buttonImage: "https://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
-            buttonImageOnly: true,
-            buttonText: "Select date"*/
-            // Source: https://stackoverflow.com/a/55398081/12511801
-            //format: 'dd/MM/yyyy'
-        });
 
         $("#datepicker").datepicker("option", "dateFormat", "dd/mm/yy");
 

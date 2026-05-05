@@ -20,29 +20,24 @@
         <div class="cuerpo">
             <h1>Minimarket</h1>
             <h2>Registrar producto</h2>
-            <form action="">
+            <form id="frmProducto">
                 <span id="spn_index_producto" style="display: none;"></span>
                 <span>Nombre del producto:</span>
-                <input type="text" class="input-texto" id="txt_nombre_producto" /><br />
+                <input type="text" class="input-texto" id="txt_nombre_producto" maxlength="250" required /><br />
                 <span>Tipo de producto:</span>
-                <select id="ddlTipoProducto" class="lista_css">
-                    <option value="0">-- Seleccione--</option>
-                    <option value="1">Cereales</option>
-                    <option value="2">Gaseosas</option>
-                    <option value="3">Productos de aseo</option>
-                </select><br />
+                <select id="ddlTipoProducto" class="lista_css"></select><br />
                 <span>Precio ($):</span>
-                <input type="number" class="input-texto" id="txt_precio_producto" />
+                <input type="number" class="input-texto" id="txt_precio_producto" maxlength="12" required />
                 <span>Descripción:</span>
-                <textarea class="input-texto" id="txt_descripcion_producto" rows="5" cols="20"
-                    maxlength="250"></textarea>
+                <textarea class="input-texto" id="txt_descripcion_producto" rows="5" cols="20" maxlength="250"
+                    required></textarea>
                 <span>Marca:</span>
-                <input type="text" class="input-texto" id="txt_marca_producto" /><br />
-                <input type="button" class="boton-enviar" value="Registrar" title="Registrar" onclick="guardar()" />
+                <select id="ddlMarca" class="lista_css"></select><br />
+                <button type="submit" class="boton-enviar" id="btn_registrar" title="Guardar cambios">Guardar</button>
             </form>
 
             <br />
-            <div id="div_dynamic_table"></div>
+            <div id="div_dynamic_table_productos"></div>
             <p class="texto parrafo">
                 Página en construcción - prototipo
             </p>
@@ -51,6 +46,8 @@
     <footer class="pie">
         <a href="#" id="link_contacto"></a>
     </footer>
+    <script type="text/javascript" src="../js/general.js"></script>
+    <script type="text/javascript" src="../js/producto_script.js"></script>
     <!-- Fuente: https://stackoverflow.com/a/9899701/4092887 -->
     <script>
         (function () {

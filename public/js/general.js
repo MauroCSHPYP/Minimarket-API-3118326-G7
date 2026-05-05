@@ -21,8 +21,8 @@ var html_salto = "<br />";
 // Si este valor es null, vacío o undefined, se debe redirigir a la página de iniciar sesión.
 
 /**
- * 
- * @param {Mostrar alerta.} mensaje 
+ * Mostrar alerta.
+ * @param {string} mensaje Texto a mostrar en el "alert" de javascript.
  */
 function mostrar_mensaje(mensaje) {
     alert(mensaje);
@@ -63,6 +63,9 @@ function cerrar_sesion() {
         //sessionStorage.removeItem("arr_productos");
         //sessionStorage.removeItem("arr_personas");
 
+        localStorage.clear();
+        sessionStorage.clear();
+
         mostrar_mensaje("Gracias por usar esta aplicación");
         window.location = "../html/login.html";
 
@@ -90,17 +93,18 @@ function crear_menu() {
 
                 // Opciones del menú para "Administrador":
                 opciones_menu.push("Registrar usuario|registrar usuario.html");
-                html_menu = agregar_lista_en_menu("Administrador ", opciones_menu);
+                opciones_menu.push("Registrar producto|registrar producto.html");
+                html_menu += agregar_lista_en_menu("Administrador ", opciones_menu);
 
                 opciones_menu = [];
-                opciones_menu.push("Registrar producto|registrar producto.html");
+                opciones_menu.push("Ventas|ventas.html");
                 html_menu += agregar_lista_en_menu("Cajero ", opciones_menu);
                 break;
             case 2:
                 // Cajero: 
                 // Opciones del menú para "Cajero":
                 opciones_menu.push("Ventas|ventas.html");
-                html_menu = agregar_lista_en_menu("Cajero ", opciones_menu);
+                html_menu += agregar_lista_en_menu("Cajero ", opciones_menu);
                 break;
             default:
                 break;
@@ -121,8 +125,8 @@ function crear_menu() {
 
 /**
  * Agregar lista desplegable en el menú.
- * @param {*} texto_encabezado es el texto a mostrar al inicio de la lista desplegable.
- * @param {*} opciones_menu son las opciones - guardadas en un Array - para mostrar las opciones de la lista desplegable.
+ * @param {string} texto_encabezado es el texto a mostrar al inicio de la lista desplegable.
+ * @param {string} opciones_menu son las opciones - guardadas en un Array - para mostrar las opciones de la lista desplegable.
  * @returns 
  */
 function agregar_lista_en_menu(texto_encabezado, opciones_menu) {
@@ -186,8 +190,10 @@ function agregar_opcion_menu(texto, ruta) {
     return opcion_menu;
 }
 
-// Mostrar ícono - cuando la página se ajusta "en tamaño". 
-// Source: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_responsive_navbar_dropdown
+/**
+ * Mostrar ícono - cuando la página se ajusta "en tamaño". 
+ * Source: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_responsive_navbar_dropdown
+ */
 function show_responsive_icon() {
     try {
         var x = document.getElementById("myTopnav");
@@ -246,10 +252,76 @@ function establecer_seleccion(id_select, id_obtained) {
 /**
  * Añadir "0" si el número es menor a 10. Esto se usa para ajustar las fechas "manualmente".
  * Fuente: https://www.w3schools.com/JSREF/tryit.asp?filename=tryjsref_datetime
- * @param {*} i 
- * @returns number
+ * @param {int} i Número a verificar para concaternarle un cero - si se cumple la condición.
+ * @returns string
  */
 function addZero(i) {
-  if (i < 10) {i = "0" + i}
-  return i;
+    if (i < 10) { i = "0" + i }
+    return i;
+}
+
+/**
+ * Llamar al endpoint correspondiente para cargar la lista desplegable "en campos HTML de tipo (select)".
+ * @param {string} endpoint_url URL del endpoint API a consultar/cargar datos.
+ * @param {int} id_select ID del elemento HTML a agregarlos las opciones.
+ * @param {string} field_id Nombre del campo que contiene el ID del elemento.
+ * @param {string} field_text Nombre del campo que contiene el texto a mostrar en el elemento.
+ * @returns 
+ */
+async function cargar_lista(endpoint_url, id_select, field_id, field_text) {
+    try {
+        const response = await fetch(endpoint_url, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json' }
+        });
+
+        const data = await response.json();
+
+        if (response.ok && !data.message) {
+            crear_lista_desplegable(id_select, data, field_id, field_text);
+
+            // Guardar la data cargada en variables de sesión para su consulta en otras páginas.
+            localStorage.setItem(id_select, JSON.stringify(data));
+
+        } else {
+            mostrar_mensaje(data.message);
+            return;
+        }
+    } catch (ex) {
+        mostrar_mensaje('No se pudo cargar la información inicial.');
+        console.log(ex);
+        return;
+    }
+}
+
+/**
+ * Obtener el nombre del detalle. Esta función se usa en las tablas.
+ * @param {int} id_select 
+ * @param {int} id_internal 
+ * @param {string} field_id 
+ * @param {string} field_text 
+ * @returns string (Nombre del detalle).
+ */
+function obtener_nombre_detalle(id_select, id_internal, field_id, field_text) {
+    var nombre_detalle = "";
+    var data_in_session = [];
+
+    try {
+        data_in_session = JSON.parse(localStorage.getItem(id_select));
+
+        for (let i = 0; i < data_in_session.length; i++) {
+            const element = data_in_session[i];
+
+            if (element[field_id] == id_internal) {
+                nombre_detalle = element[field_text];
+                break;
+            }
+        }
+
+    } catch (ex) {
+        console.log("No se pudo obtener el nombre del detalle");
+        console.log(ex);
+    }
+
+    return nombre_detalle;
 }

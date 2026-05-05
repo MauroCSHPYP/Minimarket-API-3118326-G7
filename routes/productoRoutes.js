@@ -27,7 +27,7 @@ module.exports = function (conexion) {
                 msg = "No se encontraron productos"
                 res.status(400).send({
                     message: msg
-                })
+                });
             }
             else {
                 res.status(200).send(filas);
@@ -108,7 +108,8 @@ module.exports = function (conexion) {
 
         conexion.query(sql, [ID], (error, fila) => {
             if (error) {
-                msg = `Error al obtener el producto por el ID ${ID} especificado`
+                //msg = `Error al obtener el producto por el ID ${ID} especificado`
+                msg = `Error al obtener el producto especificado`
                 console.log(msg, error)
 
                 res.status(500).send({
@@ -119,10 +120,11 @@ module.exports = function (conexion) {
             }
 
             if (fila.length === 0) {
-                msg = `No se encontró producto con ID # (${ID})`
+                //msg = `No se encontró producto con ID # (${ID})`
+                msg = `No se encontró el producto seleccionado`
                 res.status(400).send({
                     message: msg
-                })
+                });
             }
             else {
                 res.status(200).send(fila[0]);
@@ -185,7 +187,8 @@ module.exports = function (conexion) {
                     conexion.query(update_sql, datos, function (error, resultado) {
 
                         if (error) {
-                            msg = `Error al actualizar producto con ID (${ID_ITEM}). `;
+                            //msg = `Error al actualizar producto con ID (${ID_ITEM}). `;
+                            msg = `Error al actualizar el producto.`;
                             console.error(msg, error);
                             res.status(500).send({
                                 message: msg,
@@ -197,12 +200,14 @@ module.exports = function (conexion) {
                         // 2. Validación de Actualización: 
                         if (resultado.affectedRows === 0) {
                             // Error 404: Si la consulta no afectó ninguna fila, el ID no existe.
-                            msg = `No se encontró un producto con ID (${ID_ITEM}) para actualizar.`;
+                            //msg = `No se encontró un producto con ID (${ID_ITEM}) para actualizar.`;
+                            msg = `No se encontró el producto para actualizarlo.`;
                             res.status(404).send({
                                 message: msg
                             });
                         } else {
-                            msg = `Producto con ID ${ID_ITEM} actualizado correctamente.`
+                            //msg = `Producto con ID ${ID_ITEM} actualizado correctamente.`
+                            msg = `Producto actualizado correctamente.`
                             res.status(200).send({
                                 message: msg,
                                 affectedRows: resultado.affectedRows
@@ -231,7 +236,8 @@ module.exports = function (conexion) {
         conexion.query(sql, [ID], function (error, resultado) {
 
             if (error) {
-                msg = `Error al eliminar producto con ID # ${ID}:`;
+                //msg = `Error al eliminar producto con ID # ${ID}:`;
+                msg = `Error al eliminar el producto seleccionado`;
                 console.error(msg, error);
                 res.status(500).send({
                     message: msg,
@@ -242,7 +248,8 @@ module.exports = function (conexion) {
             // Validación de Eliminación
             if (resultado.affectedRows === 0) {
                 // Si no se afectó ninguna fila, el producto no existe.
-                msg = `No se encontró el producto con ID ${ID} para eliminar.`;
+                //msg = `No se encontró el producto con ID ${ID} para eliminar.`;
+                msg = `No se encontró el producto a eliminar.`;
                 return res.status(404).json({
                     mensaje: msg
                 });

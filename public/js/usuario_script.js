@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     cargar_lista(API_URL_R_ROLES, "ddlRol", "ID_ROL", "NOMBRE_ROL");
     recargar_tabla_personas();
 
+    /**
+     * Evento OnClick del botón. Gestiona tanto la creación como la actualización de registros en esta página.
+     */
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -123,36 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * Llamar al endpoint correspondiente para cargar la lista desplegable "en campos HTML de tipo (select)".
- * @param {string} endpoint_url URL del endpoint API a consultar/cargar datos.
- * @param {int} id_select ID del elemento HTML a agregarlos las opciones.
- * @param {string} field_id Nombre del campo que contiene el ID del elemento.
- * @param {string} field_text Nombre del campo que contiene el texto a mostrar en el elemento.
- * @returns 
- */
-async function cargar_lista(endpoint_url, id_select, field_id, field_text) {
-    try {
-        const response = await fetch(endpoint_url, {
-            method: 'GET',
-            headers: { 'Content-type': 'application/json' }
-        });
-
-        const data = await response.json();
-
-        if (response.ok && !data.message) {
-            crear_lista_desplegable(id_select, data, field_id, field_text);
-        } else {
-            mostrar_mensaje(data.message);
-            return;
-        }
-    } catch (ex) {
-        mostrar_mensaje('No se pudo cargar la información inicial.');
-        console.log(ex);
-        return;
-    }
-}
-
-/**
  * Limpiar los campos del formulario.
  */
 async function limpiar_form() {
@@ -184,7 +157,6 @@ async function recargar_tabla_personas() {
 
         // Variables: 
         const API_URL_R_USER = "http://localhost:3000/app/usuarios";
-        var arr_campos_formulario_personas = ["txtprim_nombre", "txtprim_apellido", "ddlTipoDocumento", "datepicker"];
         var inicio_tabla = '<table id="tbl_personas">';
         var encabezado = '<tr><th>Nombre(s)</th><th>Apellido(s)</th><th>Fecha de nacimiento</th><th>Acción</th></tr>';
         var fila = "<tr><td>{0}</td><td>{1}</td><td>{2}</td><td><a href='#' id='lnk_edit_{3}' onclick='seleccionar_usuario(\"{4}\")'>Editar</a> - <a href='#' id='lnk_delete_{3}' onclick='eliminar_persona(\"{4}\")'>Eliminar</a><span id='span_data_{5}' class='hdf_data'>{6}</span></td></tr>";
@@ -286,19 +258,22 @@ async function seleccionar_usuario(id_user) {
  */
 async function eliminar_persona(id_user) {
     try {
+        if (confirm("¿Está seguro que desea eliminar este registro?")) {
 
-        var API_URL_D_USER = "http://localhost:3000/app/usuarios/" + id_user;
-        const response = await fetch(API_URL_D_USER, {
-            method: 'DELETE',
-            headers: { 'Content-type': 'application/json' }
-        });
+            var API_URL_D_USER = "http://localhost:3000/app/usuarios/" + id_user;
+            const response = await fetch(API_URL_D_USER, {
+                method: 'DELETE',
+                headers: { 'Content-type': 'application/json' }
+            });
 
-        const data = await response.json();
+            const data = await response.json();
 
-        mostrar_mensaje(data.mensaje);
-        //data.detalleError
-        recargar_tabla_personas();
-        limpiar_form();
+
+            mostrar_mensaje(data.mensaje);
+            //data.detalleError
+            recargar_tabla_personas();
+            limpiar_form();
+        }
 
     } catch (error) {
         console.log(error);
