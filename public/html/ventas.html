@@ -6,9 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Página principal - Minimarket</title>
     <link rel="stylesheet" href="../css/style.css" />
-    <script type="text/javascript" src="../js/general.js"></script>
-    <script type="text/javascript" src="../js/productos.js"></script>
-    <script type="text/javascript" src="../js/ventas.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 </head>
 
@@ -21,24 +18,24 @@
         <div class="cuerpo">
             <h1>Minimarket</h1>
             <h2>Registrar ventas</h2>
-            <form action="">
+            <form id="frmVenta">
                 <span id="spn_index_producto" style="display: none;"></span>
                 <span>Buscar producto:</span>
                 <div>
                     <input type="text" class="input-search-prod" id="txt_nombre_producto"
                         placeholder="Presione la lupa para buscar un producto" disabled />
-                    <img src="../img/searchicon.png" alt="search" title="Buscar producto"
-                        id="myBtn" />
+                    <img src="../img/searchicon.png" alt="search" title="Buscar producto" id="myBtn" />
                 </div>
                 <span>Cantidad:</span>
-                <input type="number" class="input-texto" id="txt_cantidad" min="1" onkeyup="calcular_precio(this)"  oninput="calcular_precio(this)" />
+                <input type="number" class="input-texto" id="txt_cantidad" min="1" onkeyup="calcular_precio(this)"
+                    oninput="calcular_precio(this)" />
                 <span>Precio ($):</span>
                 <span id="spn_precio_producto" style="display: none;"></span>
                 <input type="number" class="input-texto" id="txt_precio" disabled /><br />
                 <div>
-                    <input type="button" class="boton-agregar" value="Agregar" title="Agregar"
+                    <input type="button" class="boton-agregar" value="Agregar" title="Agregar producto a vender"
                         onclick="agregar_producto_a_vender()" />
-                    <input type="button" class="boton-cancelar" value="Cancelar" title="Cancelar"
+                    <input type="button" class="boton-cancelar" value="Cancelar" title="Cancelar la venta actual"
                         onclick="cancelar_venta()" />
                 </div>
             </form>
@@ -50,9 +47,34 @@
                     <div id="div_dynamic_table_productos"></div>
                 </div>
             </div>
-
             <br />
-            <div id="div_prods_en_caja"></div>
+            <div id="div_prods_en_caja">
+                <table id="tbl_productos_en_caja" class="display">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio ($)</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h4>Total: <span id="str_total">0</span></h4>
+                <form id="frmVenta2">
+                    <div>
+                        <button type="submit" class="boton-finalizar" id="btn_registrar"
+                            title="Completar la venta">Facturar</button>
+                    </div>
+                </form>
+            </div>
             <p class="texto parrafo">
                 Página en construcción - prototipo
             </p>
@@ -61,13 +83,50 @@
     <footer class="pie">
         <a href="#" id="link_contacto"></a>
     </footer>
+    <script type="text/javascript" src="../js/general.js"></script>
+    <script type="text/javascript" src="../js/venta_script.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/2.3.8/js/dataTables.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.css" />
     <!-- Fuente: https://stackoverflow.com/a/9899701/4092887 -->
     <script>
         (function () {
             document.getElementById("link_contacto").innerText = "Derechos reservados © (" + new Date().getFullYear() + ") - contáctenos";
             comprobar_sesion();
-            recargar_tabla_productos();
-            recargar_tabla_prods_en_caja();
+            cargar_productos();
+            //recargar_tabla_prods_en_caja();
+
+            // Source: https://datatables.net/examples/i18n/options.html
+            new DataTable('#tbl_productos_en_caja', {
+                language: {
+                    decimal: "",
+                    emptyTable: "No hay productos a facturar",
+                    info: "Mostrando página _PAGE_ de _PAGES_", // Showing _START_ to _END_ of _TOTAL_ entries
+                    infoEmpty: "No hay productos a facturar",
+                    infoFiltered: "(filtrados de _MAX_ registros totales)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostrando _MENU_ registros por página",
+                    loadingRecords: "Cargando...",
+                    processing: "",
+                    search: "Buscar:",
+                    zeroRecords: "No hay resultados que coincidan con el filtro",
+                    paginate: {
+                        first: "Primero",
+                        last: "Último",
+                        next: "Siguiente",
+                        previous: "Anterior"
+                    },
+                    aria: {
+                        orderable: "Ordenar por esta columna",
+                        orderableReverse: "Orden inverso de esta columna"
+                    }
+                },
+                "searching": false
+            });
+            
+            // Source: https://stackoverflow.com/a/21181021/4092887
+            $('#tbl_productos_en_caja').removeClass('dataTable');
 
             // Source: Code for modal popup - source: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
 

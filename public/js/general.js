@@ -16,6 +16,30 @@ var text_break_line = "\r\n";
 /** Salto de línea - HTML. */
 var html_salto = "<br />";
 
+/** URL base de la API. */
+const URL_BASE_APP = "http://localhost:3000/app/";
+
+/**
+ * Create our number formatter.
+ * Source: https://stackoverflow.com/a/16233919/4092887
+ */
+const formatter = new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+
+    // These options can be used to round to whole numbers.
+    trailingZeroDisplay: 'stripIfInteger'   // This is probably what most people
+    // want. It will only stop printing
+    // the fraction when the input
+    // amount is a round number (int)
+    // already. If that's not what you
+    // need, have a look at the options
+    // below.
+    //minimumFractionDigits: 0, // This suffices for whole numbers, but will
+    // print 2500.10 as $2,500.1
+    //maximumFractionDigits: 0, // Causes 2500.99 to be printed as $2,501
+});
+
 // sessionStorage.usuario
 // Objeto JSON con los datos del usuario en sesión.
 // Si este valor es null, vacío o undefined, se debe redirigir a la página de iniciar sesión.
@@ -296,10 +320,10 @@ async function cargar_lista(endpoint_url, id_select, field_id, field_text) {
 
 /**
  * Obtener el nombre del detalle. Esta función se usa en las tablas.
- * @param {int} id_select 
- * @param {int} id_internal 
- * @param {string} field_id 
- * @param {string} field_text 
+ * @param {int} id_select ID de la variable en sesión donde se encuentran los datos.
+ * @param {int} id_internal ID a consultar contra los datos en sesión.
+ * @param {string} field_id Nombre del campo ID en la fuente de datos.
+ * @param {string} field_text Nombre del campo a visualizar - detalle.
  * @returns string (Nombre del detalle).
  */
 function obtener_nombre_detalle(id_select, id_internal, field_id, field_text) {
@@ -308,6 +332,10 @@ function obtener_nombre_detalle(id_select, id_internal, field_id, field_text) {
 
     try {
         data_in_session = JSON.parse(localStorage.getItem(id_select));
+
+        if (!data_in_session) {
+            return nombre_detalle;
+        }
 
         for (let i = 0; i < data_in_session.length; i++) {
             const element = data_in_session[i];
@@ -324,4 +352,35 @@ function obtener_nombre_detalle(id_select, id_internal, field_id, field_text) {
     }
 
     return nombre_detalle;
+}
+
+/**
+ * Llamar al endpoint correspondiente para cargar la tabla detalle "en variables de sesión".
+ * @param {string} endpoint_url URL del endpoint a consumir.
+ * @param {string} detail_name Nombre a establecer en la variable de sesión.
+ * @returns 
+ */
+async function cargar_tabla_detalle(endpoint_url, detail_name) {
+    try {
+        const response = await fetch(endpoint_url, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json' }
+        });
+
+        const data = await response.json();
+
+        if (response.ok && !data.message) {
+
+            // Guardar la data cargada en variables de sesión para su consulta en otras páginas.
+            localStorage.setItem(detail_name, JSON.stringify(data));
+
+        } else {
+            mostrar_mensaje(data.message);
+            return;
+        }
+    } catch (ex) {
+        mostrar_mensaje('No se pudo cargar la información del detalle.');
+        console.log(ex);
+        return;
+    }
 }

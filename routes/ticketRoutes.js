@@ -33,7 +33,7 @@ module.exports = function (conexion) {
         // Validaciones iniciales: 
         if (!T_ID_USUARIO || !T_DETALLES || T_DETALLES.length <= 0) {
             return res.status(400).send({
-                Mensaje: "Complete la información del ticket. Verifique."
+                message: "Complete la información del ticket. Verifique."
             });
         }
 
@@ -41,12 +41,12 @@ module.exports = function (conexion) {
         for (const item of T_DETALLES) {
             if (item.ID_ITEM <= 0 || item.PRECIO <= 0 || item.CANTIDAD <= 0) {
                 return res.status(400).send({
-                    Mensaje: "Detalles de la venta incorrectos. Verifique."
+                    message: "Detalles de la venta incorrectos. Verifique."
                 });
             }
 
-            // Calcular total del ticket = suma de los precios de los productos selecionados: 
-            total_ticket += item.PRECIO * item.CANTIDAD;
+            // Calcular total del ticket = el precio ya viene calculado. 
+            total_ticket += item.PRECIO;
         }
 
         // Uso de la variable global de conexión - se usará en las transacciones a continuación: 
@@ -146,7 +146,8 @@ WHERE T.ID_TICKET = ?`;
 
         conexion.query(sql, [ID], (error, filas) => {
             if (error) {
-                msg = `Error al obtener el detalle del ticket con ID # (${ID})`
+                //msg = `Error al obtener el detalle del ticket con ID # (${ID})`
+                msg = `Error al obtener el detalle del ticket`
                 console.log(msg, error)
 
                 res.status(500).send({
@@ -157,7 +158,8 @@ WHERE T.ID_TICKET = ?`;
             }
 
             if (filas.length === 0) {
-                msg = `No se encontró un ticket con ID # (${ID})`
+                //msg = `No se encontró un ticket con ID # (${ID})`
+                msg = `No se encontró un ticket con la información seleccionada`
                 res.status(404).send({
                     message: msg
                 })

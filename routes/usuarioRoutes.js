@@ -274,7 +274,7 @@ module.exports = function (conexion) {
             });
         }
 
-        const sql = "SELECT NOMBRE, APELLIDOS, ID_ROL, NUMERO_IDENTIFICACION, ALIAS, CONTRASENA FROM usuario WHERE ALIAS = ?";
+        const sql = "SELECT ID_USUARIO, NOMBRE, APELLIDOS, ID_ROL, NUMERO_IDENTIFICACION, ALIAS, CONTRASENA FROM usuario WHERE ALIAS = ?";
         var msg = "";
 
         conexion.query(sql, [alias], (error, results) => {

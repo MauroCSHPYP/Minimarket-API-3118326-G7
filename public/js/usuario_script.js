@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     const form = document.getElementById('frmUsuario');
-    const API_URL_R_TIPOS_DOC = "http://localhost:3000/app/tiposDocumentos";
-    const API_URL_R_ROLES = "http://localhost:3000/app/roles";
+    const API_URL_R_TIPOS_DOC = URL_BASE_APP + "tiposDocumentos";
+    const API_URL_R_ROLES = URL_BASE_APP + "roles";
 
     cargar_lista(API_URL_R_TIPOS_DOC, "ddlTipoDocumento", "ID_TIPO_DOCUMENTO", "NOMBRE_DOCUMENTO");
     cargar_lista(API_URL_R_ROLES, "ddlRol", "ID_ROL", "NOMBRE_ROL");
@@ -67,8 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
 
-            const API_URL_C_USER = "http://localhost:3000/app/usuarios";
-            var API_URL_U_USER = "http://localhost:3000/app/usuarios/" + selected_persona;
+            const API_URL_C_USER = URL_BASE_APP + "usuarios";
+            var API_URL_U_USER = URL_BASE_APP + "usuarios/" + selected_persona;
 
             const usuario_obj = {
                 "NOMBRE": nombres,
@@ -156,7 +156,7 @@ async function recargar_tabla_personas() {
     try {
 
         // Variables: 
-        const API_URL_R_USER = "http://localhost:3000/app/usuarios";
+        const API_URL_R_USER = URL_BASE_APP + "usuarios";
         var inicio_tabla = '<table id="tbl_personas">';
         var encabezado = '<tr><th>Nombre(s)</th><th>Apellido(s)</th><th>Fecha de nacimiento</th><th>Acción</th></tr>';
         var fila = "<tr><td>{0}</td><td>{1}</td><td>{2}</td><td><a href='#' id='lnk_edit_{3}' onclick='seleccionar_usuario(\"{4}\")'>Editar</a> - <a href='#' id='lnk_delete_{3}' onclick='eliminar_persona(\"{4}\")'>Eliminar</a><span id='span_data_{5}' class='hdf_data'>{6}</span></td></tr>";
@@ -260,7 +260,7 @@ async function eliminar_persona(id_user) {
     try {
         if (confirm("¿Está seguro que desea eliminar este registro?")) {
 
-            var API_URL_D_USER = "http://localhost:3000/app/usuarios/" + id_user;
+            var API_URL_D_USER = URL_BASE_APP + "usuarios/" + id_user;
             const response = await fetch(API_URL_D_USER, {
                 method: 'DELETE',
                 headers: { 'Content-type': 'application/json' }

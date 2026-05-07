@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     const form = document.getElementById('frmProducto');
-    const API_URL_R_MARCAS = "http://localhost:3000/app/marcas";
-    const API_URL_R_TIPOS_PRODUCTO = "http://localhost:3000/app/tiposproductos";
+    const API_URL_R_MARCAS = URL_BASE_APP + "marcas";
+    const API_URL_R_TIPOS_PRODUCTO = URL_BASE_APP + "tiposproductos";
 
     cargar_lista(API_URL_R_MARCAS, "ddlMarca", "ID_MARCA", "NOMBRE_MARCA");
     cargar_lista(API_URL_R_TIPOS_PRODUCTO, "ddlTipoProducto", "ID_TIPO_PRODUCTO", "NOMBRE_TIPO_PRODUCTO");
@@ -45,8 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
 
-            const API_URL_C_PRODUCT = "http://localhost:3000/app/productos";
-            var API_URL_U_PRODUCT = "http://localhost:3000/app/productos/" + selected_producto;
+            const API_URL_C_PRODUCT = URL_BASE_APP + "productos";
+            var API_URL_U_PRODUCT = URL_BASE_APP + "productos/" + selected_producto;
 
             const producto_obj = {
                 "ID_TIPO_PRODUCTO": tipo_producto,
@@ -125,26 +125,23 @@ async function recargar_tabla_productos() {
     try {
 
         // Variables: 
-        const API_URL_R_USER = "http://localhost:3000/app/productos";
+        const API_URL_R_PRODUCT = URL_BASE_APP + "productos";
         var inicio_tabla = '<table id="tbl_personas">';
         var encabezado = '<tr><th>Producto</th><th>Tipo</th><th>Precio ($)</th><th>Descripción</th><th>Marca</th><th>Acción</th></tr>';
         var fila = "<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td><a href='#' id='lnk_edit_{5}' onclick='seleccionar_producto(\"{6}\")'>Editar</a> - <a href='#' id='lnk_delete_{5}' onclick='eliminar_producto(\"{6}\")'>Eliminar</a><span id='span_data_{5}' class='hdf_data'>{7}</span></td></tr>";
         var temp_fila = "";
         var cuerpo_tabla = "";
         var final_tabla = '</table>';
-        var fecha_user = "";
 
         // Limpiar div:  
         document.getElementById("div_dynamic_table_productos").innerHTML = "";
 
-        const response = await fetch(API_URL_R_USER, {
+        const response = await fetch(API_URL_R_PRODUCT, {
             method: 'GET',
             headers: { 'Content-type': 'application/json' }
         });
 
         const data = await response.json();
-
-        //console.log(localStorage.getItem("ddlTipoProducto"));
 
         if (response.ok && !data.message) {
             // Armar los ítems (es decir, personas) disponibles para su selección y consulta: 
@@ -178,7 +175,7 @@ async function recargar_tabla_productos() {
         }
 
     } catch (ex) {
-        console.log("No se pudo cargar los usuarios.");
+        console.log("No se pudo cargar los productos.");
         console.log(ex);
     }
 }
@@ -192,13 +189,13 @@ async function seleccionar_producto(id_product) {
     try {
         var spn = document.getElementById("span_data_" + id_product);
         if (spn.innerText != undefined) {
-            var data_user = JSON.parse(spn.innerText);
-            document.getElementById("spn_index_producto").innerText = data_user["ID_PRODUCTO"];
-            document.getElementById('txt_nombre_producto').value = data_user["NOMBRE_PRODUCTO"];
-            establecer_seleccion("ddlTipoProducto", data_user["ID_TIPO_PRODUCTO"]);
-            document.getElementById('txt_precio_producto').value = data_user["VALOR"];
-            document.getElementById('txt_descripcion_producto').value = data_user["DESCRIPCION_PRODUCTO"];
-            establecer_seleccion("ddlMarca", data_user["ID_MARCA"]);
+            var data_product = JSON.parse(spn.innerText);
+            document.getElementById("spn_index_producto").innerText = data_product["ID_PRODUCTO"];
+            document.getElementById('txt_nombre_producto').value = data_product["NOMBRE_PRODUCTO"];
+            establecer_seleccion("ddlTipoProducto", data_product["ID_TIPO_PRODUCTO"]);
+            document.getElementById('txt_precio_producto').value = data_product["VALOR"];
+            document.getElementById('txt_descripcion_producto').value = data_product["DESCRIPCION_PRODUCTO"];
+            establecer_seleccion("ddlMarca", data_product["ID_MARCA"]);
         }
 
     } catch (error) {
@@ -215,7 +212,7 @@ async function eliminar_producto(id_product) {
     try {
         if (confirm("¿Está seguro que desea eliminar este registro?")) {
 
-            var API_URL_D_PRODUCT = "http://localhost:3000/app/productos/" + id_product;
+            var API_URL_D_PRODUCT = URL_BASE_APP + "productos/" + id_product;
             const response = await fetch(API_URL_D_PRODUCT, {
                 method: 'DELETE',
                 headers: { 'Content-type': 'application/json' }
