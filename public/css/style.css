@@ -548,3 +548,9 @@ td {
 .hdf_data {
     display: none;
 }
+
+/* Identifica los productos que NO tienen inventario. */
+.tr_missing_inventory {
+    background-color: red !important;
+    cursor: help;
+}

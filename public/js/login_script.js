@@ -31,17 +31,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Cargar las tablas de detalle - según el rol del usuario logueado: 
                 switch (data.user.ID_ROL) {
                     case 1:
-                        cargar_tabla_detalle(URL_BASE_APP + "tiposDocumentos", "TIPO_DOCUMENTO");
-                        cargar_tabla_detalle(URL_BASE_APP + "roles", "ROL");
+                        await cargar_tabla_detalle(URL_BASE_APP + "tiposDocumentos", "TIPO_DOCUMENTO");
+                        await cargar_tabla_detalle(URL_BASE_APP + "roles", "ROL");
                         break;
                     default:
                         break;
                 }
 
                 // Aplica para el resto de los roles - no implica un riesgo de seguridad: 
-                cargar_tabla_detalle(URL_BASE_APP + "marcas", "MARCA");
-                cargar_tabla_detalle(URL_BASE_APP + "tiposproductos", "TIPO_PRODUCTO");
-                cargar_tabla_detalle(URL_BASE_APP + "tiposunidades", "TIPO_UNIDAD");
+                await cargar_tabla_detalle(URL_BASE_APP + "marcas", "MARCA");
+                await cargar_tabla_detalle(URL_BASE_APP + "tiposproductos", "TIPO_PRODUCTO");
+                await cargar_tabla_detalle(URL_BASE_APP + "tiposunidades", "TIPO_UNIDAD");
 
                 // Redireccionar al usuario - según el rol del usuario logueado: 
                 switch (data.user.ID_ROL) {

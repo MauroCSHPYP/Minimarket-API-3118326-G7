@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!precio_producto) {
             msg += "El campo 'precio' es requerido." + text_break_line;
         } else if (parseFloat(precio_producto) <= 0) {
-            msg += "El precio ebe ser mayor a $0." + text_break_line;
+            msg += "El precio debe ser mayor a $0." + text_break_line;
         }
 
         if (tipo_producto == 0) {
@@ -126,7 +126,7 @@ async function recargar_tabla_productos() {
 
         // Variables: 
         const API_URL_R_PRODUCT = URL_BASE_APP + "productos";
-        var inicio_tabla = '<table id="tbl_personas">';
+        var inicio_tabla = '<table id="tbl_dyn_productos">';
         var encabezado = '<tr><th>Producto</th><th>Tipo</th><th>Precio ($)</th><th>Descripción</th><th>Marca</th><th>Acción</th></tr>';
         var fila = "<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td><a href='#' id='lnk_edit_{5}' onclick='seleccionar_producto(\"{6}\")'>Editar</a> - <a href='#' id='lnk_delete_{5}' onclick='eliminar_producto(\"{6}\")'>Eliminar</a><span id='span_data_{5}' class='hdf_data'>{7}</span></td></tr>";
         var temp_fila = "";

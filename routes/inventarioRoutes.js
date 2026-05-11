@@ -3,10 +3,15 @@ const ruta = express.Router();
 
 // 14/01/2026: Inventario.
 // TO-DO: Crear y probar requests.
+// 11/05/2026: COMPLETADO.
 module.exports = function (conexion) {
     // Obtener todos los inventarios:
     ruta.get('/inventarios', (req, res) => {
-        const sql = 'SELECT * from inventario';
+        // SELECT * from inventario
+        const sql = `SELECT I.ID_INVENTARIO, P.ID_PRODUCTO, I.CANTIDAD, P.ID_TIPO_PRODUCTO, 
+P.ID_MARCA, P.NOMBRE_PRODUCTO, P.DESCRIPCION_PRODUCTO, P.VALOR
+FROM inventario AS I RIGHT JOIN producto AS P
+ON I.ID_PRODUCTO = P.ID_PRODUCTO;`;
         var msg = "";
 
         conexion.query(sql, (error, filas) => {
@@ -99,7 +104,7 @@ module.exports = function (conexion) {
 
         conexion.query(sql, [ID], (error, fila) => {
             if (error) {
-                msg = `Error al obtener el inventario por el ID ${ID} especificado`
+                msg = `Error al obtener el inventario del producto seleccionado`
                 console.log(msg, error)
 
                 res.status(500).send({
@@ -110,7 +115,7 @@ module.exports = function (conexion) {
             }
 
             if (fila.length === 0) {
-                msg = `No se encontró un inventario con ID # (${ID})`
+                msg = `No se encontró un inventario para el producto seleccionado`
                 res.status(400).send({
                     message: msg
                 })
@@ -167,35 +172,34 @@ module.exports = function (conexion) {
                     conexion.query(update_sql, datos, function (error, resultado) {
 
                         if (error) {
-                            msg = `Error al actualizar inventario con ID (${ID_ITEM}). `;
+                            msg = `Error al actualizar inventario del producto seleccionado. `;
                             console.error(msg, error);
-                            res.status(500).send({
+                            return res.status(500).send({
                                 message: msg,
                                 detalleError: error.code
                             });
-                            return;
                         }
 
                         // 2. Validación de Actualización: 
                         if (resultado.affectedRows === 0) {
-                            msg = `No se encontró un inventario con ID (${ID_ITEM}) para actualizar.`;
-                            res.status(404).send({
+                            msg = `No se encontró un inventario asignado al producto seleccionado.`;
+                            return res.status(404).send({
                                 message: msg
                             });
                         } else {
                             //msg = `Inventario con ID ${ID_ITEM} actualizado correctamente.`
                             msg = `Inventario actualizado correctamente.`
-                            res.status(200).send({
+                            return res.status(200).send({
                                 message: msg,
                                 affectedRows: resultado.affectedRows
                             });
                         }
                     });
                 } else {
-                    msg = "Ya existe un inventario para el producto especificado. Solo puede haber (1) inventario por producto. Cantidad: " + es_duplicado;
+                    msg = "Ya existe (" + es_duplicado + ") inventario para el producto especificado. Solo puede haber (1) registro de inventario por producto.";
                     console.log(msg)
 
-                    res.status(500).send({
+                    return res.status(500).send({
                         message: msg
                     });
                 }
@@ -213,7 +217,7 @@ module.exports = function (conexion) {
         conexion.query(sql, [ID], function (error, resultado) {
 
             if (error) {
-                msg = `Error al eliminar inventario con ID # ${ID}:`;
+                msg = `Error al eliminar el inventario del producto seleccionado`;
                 console.error(msg, error);
                 res.status(500).send({
                     message: msg,
@@ -223,13 +227,13 @@ module.exports = function (conexion) {
             }
             // Validación de Eliminación
             if (resultado.affectedRows === 0) {
-                msg = `No se encontró inventario con ID ${ID} para eliminar.`;
+                msg = `No se encontró el inventario del producto seleccionado para eliminar.`;
                 return res.status(404).json({
                     mensaje: msg
                 });
             }
 
-            msg = "Inventario eliminado correctamente.";
+            msg = "El inventario del producto seleccionado ha sido eliminado correctamente.";
             res.status(200).json({
                 mensaje: msg
             });

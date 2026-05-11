@@ -118,6 +118,7 @@ function crear_menu() {
                 // Opciones del menú para "Administrador":
                 opciones_menu.push("Registrar usuario|registrar usuario.html");
                 opciones_menu.push("Registrar producto|registrar producto.html");
+                opciones_menu.push("Inventario|inventario.html");
                 html_menu += agregar_lista_en_menu("Administrador ", opciones_menu);
 
                 opciones_menu = [];
