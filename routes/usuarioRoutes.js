@@ -15,7 +15,7 @@ module.exports = function (conexion) {
                 console.log(msg, error)
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
@@ -24,7 +24,7 @@ module.exports = function (conexion) {
             if (filas.length === 0) {
                 msg = "No se encontraron usuarios"
                 res.status(400).send({
-                    message: msg
+                    mensaje: msg
                 })
             }
             else {
@@ -58,7 +58,7 @@ module.exports = function (conexion) {
                 es_duplicado = -1;
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     error: error.code
                 });
                 return;
@@ -73,13 +73,13 @@ module.exports = function (conexion) {
                             console.log(msg, error)
 
                             res.status(500).send({
-                                message: msg,
+                                mensaje: msg,
                                 error: error.code
                             });
                         } else {
                             msg = "Usuario creado con éxito"
                             res.status(201).send({
-                                message: msg,
+                                mensaje: msg,
                                 ID_USUARIO: resultado.insertId
                             });
                         }
@@ -89,7 +89,7 @@ module.exports = function (conexion) {
                     console.log(msg)
 
                     res.status(500).send({
-                        message: msg
+                        mensaje: msg
                     });
                 }
             }
@@ -109,7 +109,7 @@ module.exports = function (conexion) {
                 console.log(msg, error)
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
@@ -118,7 +118,7 @@ module.exports = function (conexion) {
             if (fila.length === 0) {
                 msg = `No se encontró usuario con # de identificación (${NUM_IDENT}) especificado.`
                 res.status(400).send({
-                    message: msg
+                    mensaje: msg
                 })
             }
             else {
@@ -174,7 +174,7 @@ module.exports = function (conexion) {
                 es_duplicado = -1;
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     error: error.code
                 });
                 return;
@@ -190,7 +190,7 @@ module.exports = function (conexion) {
                             msg = `Error al actualizar el usuario. `;
                             console.error(msg, error);
                             res.status(500).send({
-                                message: msg,
+                                mensaje: msg,
                                 detalleError: error.code
                             });
                             return;
@@ -202,13 +202,13 @@ module.exports = function (conexion) {
                             //msg = `No se encontró un usuario con ID # (${ID_ITEM}) para actualizar.`;
                             msg = `No se encontró un usuario para actualizar.`;
                             res.status(404).send({
-                                message: msg
+                                mensaje: msg
                             });
                         } else {
                             //msg = `Usuario con ID ${ID_ITEM} actualizado correctamente.`
                             msg = `Usuario actualizado correctamente.`
                             res.status(200).send({
-                                message: msg,
+                                mensaje: msg,
                                 affectedRows: resultado.affectedRows
                             });
                         }
@@ -218,7 +218,7 @@ module.exports = function (conexion) {
                     console.log(msg)
 
                     res.status(500).send({
-                        message: msg
+                        mensaje: msg
                     });
                 }
             }
@@ -270,7 +270,7 @@ module.exports = function (conexion) {
         if (!alias || !pass) {
             return res.status(400).json({
                 success: false,
-                message: 'Usuario y contraseña son requeridos.'
+                mensaje: 'Usuario y contraseña son requeridos.'
             });
         }
 
@@ -284,7 +284,7 @@ module.exports = function (conexion) {
 
                 return res.status(500).send({
                     success: false,
-                    message: msg
+                    mensaje: msg
                 });
             }
 
@@ -292,7 +292,7 @@ module.exports = function (conexion) {
                 msg = `No se encontró un usuario registrado.`;
                 return res.status(401).send({
                     success: false,
-                    message: msg
+                    mensaje: msg
                 });
             }
 
@@ -302,7 +302,7 @@ module.exports = function (conexion) {
                 msg = `Contraseña incorrecta. Verifique.`;
                 return res.status(401).send({
                     success: false,
-                    message: msg
+                    mensaje: msg
                 });
             }
 
@@ -311,7 +311,7 @@ module.exports = function (conexion) {
             msg = `Inicio de sesión existoso.`;
             res.status(200).json({
                 success: true,
-                message: msg,
+                mensaje: msg,
                 user: user_found
             });
         })

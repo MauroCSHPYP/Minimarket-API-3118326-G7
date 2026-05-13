@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             msg = data.message;
 
             if (data.id_ticket_generado) {
-                msg = data.message + text_break_line + "Total: $" + data.total_pago_ticket;
+                msg = data.message + text_break_line + "Total: " + formatter.format(data.total_pago_ticket);
                 limpiar_form_venta();
                 localStorage.removeItem("arr_prods_en_caja");
                 cargar_tabla_productos_en_caja();
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function limpiar_form_venta() {
     try {
         var empty = "";
-        var arr_campos_formulario_caja = ["txt_nombre_producto", "txt_cantidad", "txt_precio", "spn_index_producto"];
+        var arr_campos_formulario_caja = ["txt_nombre_producto", "txt_cantidad", "txt_precio", "spn_index_producto", "spn_precio_producto"];
 
         for (var i = 0; i < arr_campos_formulario_caja.length; i++) {
 
@@ -120,25 +120,17 @@ function cancelar_venta() {
 /**
  * Cargar la tabla de productos registrados en el sistema.
  * Estos son los productos que el cajero selecciona para crear la venta/factura/ticket.
+ * NOTA: Crear otro endpoint para obtener los productos que estén en inventario : esto, para evitar error desde caja, pero, 
+ * la causa del error es la falta de administración del inventario.
  * @returns async
  */
 async function cargar_productos() {
     try {
 
         // Variables: 
-        const API_URL_R_USER = URL_BASE_APP + "productos";
-        var inicio_cuerpo_tabla = '<table id="tbl_personas">';
-        var encabezado = '<tr><th>Producto</th><th>Tipo</th><th>Precio ($)</th><th>Descripción</th><th>Marca</th><th>Acción</th></tr>';
-        var fila = "<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td><a href='#' id='lnk_edit_{5}' onclick='seleccionar_producto(\"{6}\")'>Seleccionar</a><span id='span_data_{5}' class='hdf_data'>{7}</span></td></tr>";
-        var temp_fila = "";
-        var filas_a_generar = "";
-        var final_cuerpo_tabla = '</table>';
-        var fecha_user = "";
+        const API_URL_R_PRODUCTS = URL_BASE_APP + "productos";
 
-        // Limpiar div:  
-        document.getElementById("div_dynamic_table_productos").innerHTML = "";
-
-        const response = await fetch(API_URL_R_USER, {
+        const response = await fetch(API_URL_R_PRODUCTS, {
             method: 'GET',
             headers: { 'Content-type': 'application/json' }
         });
@@ -146,29 +138,8 @@ async function cargar_productos() {
         const data = await response.json();
 
         if (response.ok && !data.message) {
-            // Armar los ítems (es decir, personas) disponibles para su selección y consulta: 
-            for (var i = 0; i < data.length; i++) {
-
-                // Crear una copia para el reemplazo de los datos: 
-                temp_fila = fila;
-
-                // Armar los ítems (es decir, personas) disponibles para su selección y consulta: 
-                temp_fila = temp_fila.replace("{0}", data[i]["NOMBRE_PRODUCTO"]);
-                temp_fila = temp_fila.replace("{1}", obtener_nombre_detalle("TIPO_PRODUCTO", data[i]["ID_TIPO_PRODUCTO"], "ID_TIPO_PRODUCTO", "NOMBRE_TIPO_PRODUCTO"));
-                temp_fila = temp_fila.replace("{2}", formatter.format(data[i]["VALOR"]));
-                temp_fila = temp_fila.replace("{3}", data[i]["DESCRIPCION_PRODUCTO"]);
-                temp_fila = temp_fila.replace("{4}", obtener_nombre_detalle("MARCA", data[i]["ID_MARCA"], "ID_MARCA", "NOMBRE_MARCA"));
-                temp_fila = temp_fila.replace("{5}", data[i]["ID_PRODUCTO"]);
-                temp_fila = temp_fila.replace("{5}", data[i]["ID_PRODUCTO"]);
-                temp_fila = temp_fila.replace("{6}", data[i]["ID_PRODUCTO"]);
-                temp_fila = temp_fila.replace("{7}", JSON.stringify(data[i]));
-
-                // Armar el cuerpo de la tabla - es decir, las filas de la tabla:
-                filas_a_generar += temp_fila;
-            }
-
-            // Agregar todo el HTML creado en el div dinámico:
-            document.getElementById("div_dynamic_table_productos").innerHTML = inicio_cuerpo_tabla + encabezado + filas_a_generar + final_cuerpo_tabla;
+            localStorage.setItem("productos_disponibles", JSON.stringify(data));
+            load_dt_productos();
         } else {
             mostrar_mensaje(data.message);
             return;
@@ -187,19 +158,10 @@ async function cargar_productos() {
 async function cargar_tabla_productos_en_caja() {
 
     // Variables: 
-    var inicio_cuerpo_tabla = '<tbody>';
-    var encabezado = '<thead><tr><th>Producto</th><th>Cantidad</th><th>Precio($)</th><th>Acción</th></tr></thead>';
-    var fila = "<tr><td>{0}</td><td>{1}</td><td>{2}</td><td><a href='#' id='lnk_delete_{3}' onclick='remover_producto(\"{4}\")'>Eliminar</a></td></tr>";
-    var temp_fila = "";
-    var filas_a_generar = "";
-    var final_cuerpo_tabla = '</tbody>';
     var total_venta = 0;
     var arr_prods_en_caja = [];
 
     try {
-
-        // Limpiar div:  
-        document.getElementById("tbl_productos_en_caja").innerHTML = "";
 
         // Cargar la variable de sesión en la variable local para procesarla: 
         arr_prods_en_caja = JSON.parse(localStorage.getItem("arr_prods_en_caja"));
@@ -208,33 +170,18 @@ async function cargar_tabla_productos_en_caja() {
             arr_prods_en_caja = [];
         }
 
-        // Armar los ítems (es decir, personas) disponibles para su selección y consulta: 
+        // Recorrer los productos en caja para calcular el total de la venta: 
         for (var i = 0; i < arr_prods_en_caja.length; i++) {
-
-            // Crear una copia para el reemplazo de los datos: 
-            temp_fila = fila;
-
-            // Armar los ítems (es decir, personas) disponibles para su selección y consulta: 
-            temp_fila = temp_fila.replace("{0}", arr_prods_en_caja[i]["T_NOMBRE_PRODUCTO"]);
-            temp_fila = temp_fila.replace("{1}", arr_prods_en_caja[i]["CANTIDAD"]);
-            temp_fila = temp_fila.replace("{2}", formatter.format(arr_prods_en_caja[i]["PRECIO"]));
-            temp_fila = temp_fila.replace("{3}", i);
-            temp_fila = temp_fila.replace("{4}", i);
 
             // Total en caja: 
             try { total_venta += parseInt(arr_prods_en_caja[i]["PRECIO"]); }
             catch (ex) { }
-
-            // Armar el cuerpo de la tabla - es decir, las filas de la tabla:
-            filas_a_generar += temp_fila;
         }
 
-        // Cargar el total calulado de la factura/venta/ticket: 
-        document.getElementById("str_total").innerText = (filas_a_generar.trim() == "") ? "0" : total_venta;
+        // Cargar el total calculado de la factura/venta/ticket y recargar la tabla de productos en caja: 
+        document.getElementById("str_total").innerText = total_venta;
         document.getElementById("str_total").innerText = formatter.format(document.getElementById("str_total").innerText);
-
-        // Agregar todo el HTML creado en el div dinámico:
-        document.getElementById("tbl_productos_en_caja").innerHTML = inicio_cuerpo_tabla + encabezado + filas_a_generar + final_cuerpo_tabla;
+        load_dt_en_caja();
 
     } catch (ex) {
         mostrar_mensaje("Hubo un error al cargar la tabla de productos en caja. Intente de nuevo.");
@@ -252,7 +199,6 @@ function agregar_producto_a_vender() {
 
     var arr_prods_en_caja = [];
     var temp_arr_producto = {};
-    var arr_campos_formulario_caja = ["txt_nombre_producto", "txt_cantidad", "txt_precio", "spn_index_producto"];
 
     try {
 
@@ -269,19 +215,26 @@ function agregar_producto_a_vender() {
 
         // Armar el objeto de producto - temporal: 
         temp_arr_producto = {
+            // Valores informativos: 
+            T_NOMBRE_PRODUCTO: document.getElementById("txt_nombre_producto").value,
             // Valores requeridos a enviar al endpoint: 
-            ID_ITEM: document.getElementById("spn_index_producto").value,
             CANTIDAD: document.getElementById("txt_cantidad").value,
             PRECIO: parseFloat(document.getElementById("txt_cantidad").value) * parseFloat(document.getElementById("spn_precio_producto").value),
-            // Valores informativos: 
-            T_NOMBRE_PRODUCTO: document.getElementById("txt_nombre_producto").value
+            ID_ITEM: document.getElementById("spn_index_producto").value
         };
+
+        // BUG: (Durante las pruebas), ha dejado agregar productos vacíos - lo cual es incorrecto. Con esta línea se resuelve el bug.
+        // No se coloca ANTES para usar como último recurso para la validación del objeto (i.e. producto) a agregar en la tabla de productos en caja.
+        if (document.getElementById("txt_nombre_producto").value == "") {
+            mostrar_mensaje("Debe seleccionar un producto.");
+            return;
+        }
 
         // Guardar la información en el arreglo global: 
         arr_prods_en_caja.push(temp_arr_producto);
 
         // Mostrar mensaje y guardar los cambios hechos en la variable de sesión: 
-        mostrar_mensaje("Producto agregado correctamente");
+        //mostrar_mensaje("Producto agregado correctamente");
         localStorage.setItem("arr_prods_en_caja", JSON.stringify(arr_prods_en_caja));
 
         // Limpiar los campos del formulario para dejarlo listo y recargar los productos.
@@ -353,16 +306,29 @@ function seleccionar_producto(ind_producto) {
 
 /**
  * Quitar producto listado en la tabla de "productos en caja".
- * @param {int} ind_tipo_prod Index del producto seleccionado.
+ * @param {int} id_selected_prod Index del producto seleccionado.
  */
-async function remover_producto(ind_tipo_prod) {
+async function remover_producto(id_selected_prod) {
 
+    // Variables.
     var arr_prods_en_caja = [];
+    var ind_found = 0;
+
     try {
         arr_prods_en_caja = JSON.parse(localStorage.getItem("arr_prods_en_caja"));
 
+        for (var ind = 0; ind < arr_prods_en_caja.length; ind++) {
+
+            if (arr_prods_en_caja[ind]["ID_ITEM"] == id_selected_prod) {
+                ind_found = ind;
+                break;
+            }
+        }
+
         if (confirm("¿Está seguro que desea quitar este producto?")) {
-            arr_prods_en_caja.splice(ind_tipo_prod, 1);
+            arr_prods_en_caja.splice(ind_found, 1);
+            //console.log("INDEX: " + ind_found + " - producto a borrar: ");
+            //console.log(arr_prods_en_caja[ind_found]);
             localStorage.setItem("arr_prods_en_caja", JSON.stringify(arr_prods_en_caja));
             cargar_tabla_productos_en_caja();
         }
@@ -371,4 +337,170 @@ async function remover_producto(ind_tipo_prod) {
         mostrar_mensaje("No se pudo remover el producto");
         console.log(error);
     }
+}
+
+/**
+ * Cargar la tabla "tbl_productos_en_caja" con la configuración de DataTable.
+ * Source: https://stackoverflow.com/a/52284422/4092887
+ */
+function load_dt_en_caja() {
+    // Limpiar el objeto DataTable para operarlo con la nueva configuración.
+    // Source: https://stackoverflow.com/a/52284422/4092887
+    $('#tbl_productos_en_caja').DataTable().clear().destroy();
+
+    // Configuración completa del DataTable: 
+    // Source: https://datatables.net/examples/i18n/options.html
+    new DataTable('#tbl_productos_en_caja', {
+        searching: true,
+        //lengthMenu: [5, 10, 15, 20],
+        retrieve: true,
+        ordering: false,
+        columnDefs: [
+            { data: 'T_NOMBRE_PRODUCTO', targets: 0, title: "Producto" },
+            {
+                data: 'CANTIDAD', targets: 1, title: "Cantidad"
+            },
+            {
+                data: 'PRECIO', targets: 2, title: "Precio ($)",
+                render: function (data, type) {
+                    if (type === 'display') {
+                        return formatter.format(data);
+                    }
+
+                    return data;
+                }
+            },
+            {
+                data: 'ID_ITEM', targets: 3, searchable: false, title: "Acción",
+                // Source: https://datatables.net/examples/basic_init/data_rendering.html
+                render: function (data, type) {
+                    if (type === 'display') {
+                        return "<a href='#' onclick='remover_producto(" + data + ")'>Eliminar</a>";
+                    }
+
+                    return data;
+                }
+            }
+        ],
+        data: JSON.parse(localStorage.getItem("arr_prods_en_caja")),
+        language: {
+            decimal: "",
+            emptyTable: "<strong>No hay productos a facturar</strong>",
+            info: "Mostrando página _PAGE_ de _PAGES_", // Showing _START_ to _END_ of _TOTAL_ entries
+            infoEmpty: "", //"No hay productos a facturar",
+            infoFiltered: "(_TOTAL_ elementos filtrados de _MAX_ registros totales)",
+            infoPostFix: "",
+            thousands: ",",
+            lengthMenu: "Mostrando _MENU_ registros por página",
+            loadingRecords: "Cargando...",
+            processing: "",
+            search: "Buscar:",
+            zeroRecords: "No hay resultados que coincidan con el filtro",
+            paginate: {
+                first: "Primero",
+                last: "Último",
+                next: "Siguiente",
+                previous: "Anterior"
+            },
+            aria: {
+                orderable: "Ordenar por esta columna",
+                orderableReverse: "Orden inverso de esta columna"
+            }
+        }
+    });
+
+    // Source: https://stackoverflow.com/a/21181021/4092887
+    //$('#tbl_productos_en_caja').removeClass('dataTable');
+}
+
+/**
+ * Cargar la tabla "tbl_productos_disponibles" con la configuración de DataTable.
+ * Source: https://stackoverflow.com/a/52284422/4092887
+ */
+function load_dt_productos() {
+
+    var ds_products = [];
+    ds_products = JSON.parse(localStorage.getItem("productos_disponibles"));
+
+    // Configuración completa del DataTable: 
+    // Source: https://datatables.net/examples/i18n/options.html
+    new DataTable('#tbl_productos_disponibles', {
+        searching: true,
+        lengthMenu: [5, 10, 15, 20],
+        retrieve: true,
+        ordering: true,
+        columnDefs: [
+            { data: 'NOMBRE_PRODUCTO', targets: 0, title: "Producto" },
+            {
+                data: 'ID_TIPO_PRODUCTO', targets: 1, title: "Tipo",
+                render: function (data, type) {
+                    if (type === 'display') {
+                        return obtener_nombre_detalle("TIPO_PRODUCTO", data, "ID_TIPO_PRODUCTO", "NOMBRE_TIPO_PRODUCTO");
+                    }
+
+                    return data;
+                }
+            },
+            {
+                data: 'VALOR', targets: 2, title: "Precio ($)",
+                render: function (data, type) {
+                    if (type === 'display') {
+                        return formatter.format(data);
+                    }
+
+                    return data;
+                }
+            },
+            { data: 'DESCRIPCION_PRODUCTO', targets: 3, title: "Descripción" },
+            {
+                // NOTA: Para que filtre por marca, toca modificar la consulta para que traiga el nombre desde la BD.
+                // En este caso, filtrará por el ID, no el nombre.
+                data: 'ID_MARCA', targets: 4, title: "Marca",
+                render: function (data, type) {
+                    if (type === 'display') {
+                        return obtener_nombre_detalle("MARCA", data, "ID_MARCA", "NOMBRE_MARCA");
+                    }
+
+                    return data;
+                }
+            },
+            {
+                data: 'ID_PRODUCTO', targets: 5, searchable: false, title: "Acción",
+                // Source: https://datatables.net/examples/basic_init/data_rendering.html
+                render: function (data, type, row) {
+                    if (type === 'display') {
+                        //console.log(row);
+                        return "<a href='#' onclick='seleccionar_producto(" + data + ")'>Seleccionar</a><span id='span_data_" + data + "' class='hdf_data'>" + JSON.stringify(row) + "</span>";
+                    }
+
+                    return data;
+                }
+            }
+        ],
+        data: ds_products,
+        language: {
+            decimal: "",
+            emptyTable: "<strong>No hay productos disponibles</strong>",
+            info: "Mostrando página _PAGE_ de _PAGES_", // Showing _START_ to _END_ of _TOTAL_ entries
+            infoEmpty: "No hay productos",
+            infoFiltered: "(_TOTAL_ productos filtrados de _MAX_ registros totales)",
+            infoPostFix: "",
+            thousands: ",",
+            lengthMenu: "Mostrando _MENU_ productos por página",
+            loadingRecords: "Cargando...",
+            processing: "",
+            search: "Buscar producto:",
+            zeroRecords: "No hay productos que coincidan con el filtro",
+            paginate: {
+                first: "Primero",
+                last: "Último",
+                next: "Siguiente",
+                previous: "Anterior"
+            },
+            aria: {
+                orderable: "Ordenar por esta columna",
+                orderableReverse: "Orden inverso de esta columna"
+            }
+        }
+    });
 }

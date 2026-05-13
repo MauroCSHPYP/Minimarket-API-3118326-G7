@@ -28,6 +28,7 @@
                     <img src="../img/searchicon.png" alt="search" title="Buscar producto" id="myBtn" />
                 </div>
                 <span>Cantidad:</span>
+                <span id="spn_cantidad_invent" hidden>0</span>
                 <input type="number" class="input-texto" id="txt_cantidad" min="0" />
                 <span>Tipo de producto:</span>
                 <span id="spn_tipo_producto">-</span><br />
@@ -45,7 +46,9 @@
                     <span class="close" title="Cerrar">&times;</span>
                     <h4>Inventario</h4>
                     <i><strong>NOTA:</strong> Los productos que no tienen inventario no podrán ser vendidos</i>
-                    <div id="div_dynamic_table_productos"></div>
+                    <div id="div_dynamic_table_productos">
+                        <table id="tbl_dyn_productos"></table>
+                    </div>
                 </div>
             </div>
             <p class="texto parrafo">
@@ -58,6 +61,9 @@
     </footer>
     <script type="text/javascript" src="../js/general.js"></script>
     <script type="text/javascript" src="../js/inventario_script.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/2.3.8/js/dataTables.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.css" />
     <!-- Fuente: https://stackoverflow.com/a/9899701/4092887 -->
     <script>
         (function () {

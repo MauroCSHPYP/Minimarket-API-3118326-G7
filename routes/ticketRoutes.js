@@ -97,7 +97,7 @@ module.exports = function (conexion) {
 
                 // Validación: 
                 if (inventarioResult.affectedRows == 0) {
-                    throw new Error(`Producto # ${producto.id_item} no encontrado en el inventario.`);
+                    throw new Error(`Producto # ${producto.ID_ITEM} no encontrado en el inventario.`);
                 }
             }
 

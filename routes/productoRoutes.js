@@ -17,7 +17,7 @@ module.exports = function (conexion) {
                 console.log(msg, error)
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
@@ -26,7 +26,7 @@ module.exports = function (conexion) {
             if (filas.length === 0) {
                 msg = "No se encontraron productos"
                 res.status(400).send({
-                    message: msg
+                    mensaje: msg
                 });
             }
             else {
@@ -57,7 +57,7 @@ module.exports = function (conexion) {
                 es_duplicado = -1;
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     error: error.code
                 });
                 return;
@@ -72,13 +72,13 @@ module.exports = function (conexion) {
                             console.log(msg, error)
 
                             res.status(500).send({
-                                message: msg,
+                                mensaje: msg,
                                 error: error.code
                             });
                         } else {
                             msg = "Producto creado con éxito"
                             res.status(201).send({
-                                message: msg,
+                                mensaje: msg,
                                 ID_PRODUCTO: resultado.insertId
                             });
                         }
@@ -88,7 +88,7 @@ module.exports = function (conexion) {
                     console.log(msg)
 
                     res.status(500).send({
-                        message: msg
+                        mensaje: msg
                     });
                 }
             }
@@ -113,7 +113,7 @@ module.exports = function (conexion) {
                 console.log(msg, error)
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
@@ -123,7 +123,7 @@ module.exports = function (conexion) {
                 //msg = `No se encontró producto con ID # (${ID})`
                 msg = `No se encontró el producto seleccionado`
                 res.status(400).send({
-                    message: msg
+                    mensaje: msg
                 });
             }
             else {
@@ -175,7 +175,7 @@ module.exports = function (conexion) {
                 es_duplicado = -1;
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     error: error.code
                 });
                 return;
@@ -191,7 +191,7 @@ module.exports = function (conexion) {
                             msg = `Error al actualizar el producto.`;
                             console.error(msg, error);
                             res.status(500).send({
-                                message: msg,
+                                mensaje: msg,
                                 detalleError: error.code
                             });
                             return;
@@ -203,13 +203,13 @@ module.exports = function (conexion) {
                             //msg = `No se encontró un producto con ID (${ID_ITEM}) para actualizar.`;
                             msg = `No se encontró el producto para actualizarlo.`;
                             res.status(404).send({
-                                message: msg
+                                mensaje: msg
                             });
                         } else {
                             //msg = `Producto con ID ${ID_ITEM} actualizado correctamente.`
                             msg = `Producto actualizado correctamente.`
                             res.status(200).send({
-                                message: msg,
+                                mensaje: msg,
                                 affectedRows: resultado.affectedRows
                             });
                         }
@@ -219,7 +219,7 @@ module.exports = function (conexion) {
                     console.log(msg)
 
                     res.status(500).send({
-                        message: msg
+                        mensaje: msg
                     });
                 }
             }
@@ -240,7 +240,7 @@ module.exports = function (conexion) {
                 msg = `Error al eliminar el producto seleccionado`;
                 console.error(msg, error);
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;

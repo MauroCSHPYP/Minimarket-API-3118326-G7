@@ -44,28 +44,19 @@
                 <!-- Modal content -->
                 <div class="modal-content">
                     <span class="close" title="Cerrar">&times;</span>
-                    <div id="div_dynamic_table_productos"></div>
+                    <h4>Productos</h4>
+                    <i>Seleccione el producto para vender:</i>
+                    <div id="div_dynamic_table_productos">
+                        <table id="tbl_productos_disponibles" class="display">
+                        </table>
+                    </div>
                 </div>
             </div>
             <br />
             <div id="div_prods_en_caja">
+                <h4>Productos a facturar</h4>
+                <i>Aquí se muestran los productos listos para ser facturados:</i>
                 <table id="tbl_productos_en_caja" class="display">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Cantidad</th>
-                            <th>Precio ($)</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
                 </table>
                 <h4>Total: <span id="str_total">0</span></h4>
                 <form id="frmVenta2">
@@ -96,37 +87,7 @@
             cargar_productos();
             //recargar_tabla_prods_en_caja();
 
-            // Source: https://datatables.net/examples/i18n/options.html
-            new DataTable('#tbl_productos_en_caja', {
-                language: {
-                    decimal: "",
-                    emptyTable: "No hay productos a facturar",
-                    info: "Mostrando página _PAGE_ de _PAGES_", // Showing _START_ to _END_ of _TOTAL_ entries
-                    infoEmpty: "No hay productos a facturar",
-                    infoFiltered: "(filtrados de _MAX_ registros totales)",
-                    infoPostFix: "",
-                    thousands: ",",
-                    lengthMenu: "Mostrando _MENU_ registros por página",
-                    loadingRecords: "Cargando...",
-                    processing: "",
-                    search: "Buscar:",
-                    zeroRecords: "No hay resultados que coincidan con el filtro",
-                    paginate: {
-                        first: "Primero",
-                        last: "Último",
-                        next: "Siguiente",
-                        previous: "Anterior"
-                    },
-                    aria: {
-                        orderable: "Ordenar por esta columna",
-                        orderableReverse: "Orden inverso de esta columna"
-                    }
-                },
-                "searching": false
-            });
-            
-            // Source: https://stackoverflow.com/a/21181021/4092887
-            $('#tbl_productos_en_caja').removeClass('dataTable');
+            load_dt_en_caja();
 
             // Source: Code for modal popup - source: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
 

@@ -35,7 +35,13 @@
             </form>
 
             <br />
-            <div id="div_dynamic_table_productos"></div>
+            <div id="div_dynamic_table_productos">
+                <h4>Productos</h4>
+                <i>En esta sección se muestran los productos creados en la aplicación<br />
+                    Una vez creado el producto, debe <strong><a href="inventario.html"
+                            title="gestionar el inventario">gestionar el inventario</a></strong>.</i>
+                <table id="tbl_dyn_productos"></table>
+            </div>
             <p class="texto parrafo">
                 Página en construcción - prototipo
             </p>
@@ -46,6 +52,9 @@
     </footer>
     <script type="text/javascript" src="../js/general.js"></script>
     <script type="text/javascript" src="../js/producto_script.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/2.3.8/js/dataTables.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.css" />
     <!-- Fuente: https://stackoverflow.com/a/9899701/4092887 -->
     <script>
         (function () {

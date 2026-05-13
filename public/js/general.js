@@ -303,7 +303,7 @@ async function cargar_lista(endpoint_url, id_select, field_id, field_text) {
         const data = await response.json();
 
         if (response.ok && !data.message) {
-            crear_lista_desplegable(id_select, data, field_id, field_text);
+            await crear_lista_desplegable(id_select, data, field_id, field_text);
 
             // Guardar la data cargada en variables de sesión para su consulta en otras páginas.
             localStorage.setItem(id_select, JSON.stringify(data));

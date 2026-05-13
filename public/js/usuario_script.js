@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const data = await response.json();
 
-                mostrar_mensaje(data.message);
+                mostrar_mensaje(data.mensaje);
                 if (data.affectedRows) {
                     recargar_tabla_personas();
                     limpiar_form();
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // response.ok && data.success
                 // response.ok && data.ID_USUARIO
 
-                mostrar_mensaje(data.message);
+                mostrar_mensaje(data.mensaje);
                 if (data.ID_USUARIO) {
                     recargar_tabla_personas();
                     limpiar_form();
@@ -157,16 +157,6 @@ async function recargar_tabla_personas() {
 
         // Variables: 
         const API_URL_R_USER = URL_BASE_APP + "usuarios";
-        var inicio_tabla = '<table id="tbl_personas">';
-        var encabezado = '<tr><th>Nombre(s)</th><th>Apellido(s)</th><th>Fecha de nacimiento</th><th>Acción</th></tr>';
-        var fila = "<tr><td>{0}</td><td>{1}</td><td>{2}</td><td><a href='#' id='lnk_edit_{3}' onclick='seleccionar_usuario(\"{4}\")'>Editar</a> - <a href='#' id='lnk_delete_{3}' onclick='eliminar_persona(\"{4}\")'>Eliminar</a><span id='span_data_{5}' class='hdf_data'>{6}</span></td></tr>";
-        var temp_fila = "";
-        var cuerpo_tabla = "";
-        var final_tabla = '</table>';
-        var fecha_user = "";
-
-        // Limpiar div:  
-        document.getElementById("div_dynamic_table_personas").innerHTML = "";
 
         const response = await fetch(API_URL_R_USER, {
             method: 'GET',
@@ -175,44 +165,11 @@ async function recargar_tabla_personas() {
 
         const data = await response.json();
 
-        if (response.ok && !data.message) {
-            // Armar los ítems (es decir, personas) disponibles para su selección y consulta: 
-            for (var i = 0; i < data.length; i++) {
-
-                // Crear una copia para el reemplazo de los datos: 
-                temp_fila = fila;
-
-                // Armar los ítems (es decir, personas) disponibles para su selección y consulta: 
-                temp_fila = temp_fila.replace("{0}", data[i]["NOMBRE"]);
-                temp_fila = temp_fila.replace("{1}", data[i]["APELLIDOS"]);
-
-                try {
-                    fecha_user = data[i]["FECHA_NACIMIENTO"].split("T")[0];
-                    fecha_user = new Date(fecha_user);
-                    fecha_user = addZero(fecha_user.getDate() + 1) + "/" + addZero((fecha_user.getMonth() + 1)) + "/" + fecha_user.getFullYear();
-                    temp_fila = temp_fila.replace("{2}", fecha_user);
-                }
-                catch (ex) {
-                    temp_fila = temp_fila.replace("{2}", data[i]["FECHA_NACIMIENTO"]);
-                    console.log("Error: ");
-                    console.log(ex);
-                }
-
-                temp_fila = temp_fila.replace("{3}", i);
-                temp_fila = temp_fila.replace("{3}", i);
-                temp_fila = temp_fila.replace("{4}", data[i]["ID_USUARIO"]);
-                temp_fila = temp_fila.replace("{4}", data[i]["ID_USUARIO"]);
-                temp_fila = temp_fila.replace("{5}", data[i]["ID_USUARIO"]);
-                temp_fila = temp_fila.replace("{6}", JSON.stringify(data[i]));
-
-                // Armar el cuerpo de la tabla - es decir, las filas de la tabla:
-                cuerpo_tabla += temp_fila;
-            }
-
-            // Agregar todo el HTML creado en el div dinámico:
-            document.getElementById("div_dynamic_table_personas").innerHTML = inicio_tabla + encabezado + cuerpo_tabla + final_tabla;
+        if (response.ok && !data.mensaje) {
+            localStorage.setItem("personas_disponibles", JSON.stringify(data));
+            load_dt_usuarios();
         } else {
-            mostrar_mensaje(data.message);
+            mostrar_mensaje(data.mensaje);
             return;
         }
 
@@ -278,4 +235,93 @@ async function eliminar_persona(id_user) {
     } catch (error) {
         console.log(error);
     }
+}
+
+/**
+ * Cargar la tabla "tbl_personas" con la configuración de DataTable.
+ * Source: https://stackoverflow.com/a/52284422/4092887
+ */
+function load_dt_usuarios() {
+
+    var ds_staff = [];
+    ds_staff = JSON.parse(localStorage.getItem("personas_disponibles"));
+    var incr = 0;
+
+    // Limpiar el objeto DataTable para operarlo con la nueva configuración.
+    // Source: https://stackoverflow.com/a/52284422/4092887
+    $('#tbl_personas').DataTable().clear().destroy();
+
+    // Configuración completa del DataTable: 
+    // Source: https://datatables.net/examples/i18n/options.html
+    new DataTable('#tbl_personas', {
+        searching: true,
+        retrieve: true,
+        ordering: true,
+        columnDefs: [
+            { data: 'NOMBRE', targets: 0, title: "Nombre(s)" },
+            { data: 'APELLIDOS', targets: 1, title: "Apellidos" },
+            {
+                data: 'FECHA_NACIMIENTO', targets: 2, title: "Fecha de nacimiento",
+                render: function (data, type, row) {
+                    var fecha_user = "";
+                    if (type === 'display') {
+
+                        try {
+                            fecha_user = data.split("T")[0];
+                            fecha_user = new Date(fecha_user);
+                            fecha_user = addZero(fecha_user.getDate() + 1) + "/" + addZero((fecha_user.getMonth() + 1)) + "/" + fecha_user.getFullYear();
+                        }
+                        catch (ex) {
+                            console.log("Error al formatear la fecha: ");
+                            console.log(ex);
+                            fecha_user = data;
+                        }
+
+
+                        return fecha_user;
+                    }
+
+                    return data;
+                }
+            },
+            {
+                data: 'ID_USUARIO', targets: 3, searchable: false, title: "Acción",
+                render: function (data, type, row) {
+                    if (type === 'display') {
+                        return `<a href='#' id='lnk_edit_${row["ID_USUARIO"]}' onclick='seleccionar_usuario("${row["ID_USUARIO"]}")'>Editar</a> - <a href='#' id='lnk_delete_${row["ID_USUARIO"]}' onclick='eliminar_persona("${row["ID_USUARIO"]}")'>Eliminar</a><span id='span_data_${row["ID_USUARIO"]}' class='hdf_data'>${JSON.stringify(row)}</span>`;
+                    }
+
+                    return data;
+                }
+            }
+        ],
+        data: ds_staff,
+        language: {
+            decimal: "",
+            emptyTable: "<strong>No hay usuarios registrados</strong>",
+            info: "Mostrando página _PAGE_ de _PAGES_", // Showing _START_ to _END_ of _TOTAL_ entries
+            infoEmpty: "No hay usuarios",
+            infoFiltered: "(_TOTAL_ usuarios filtrados de _MAX_ registros totales)",
+            infoPostFix: "",
+            thousands: ",",
+            lengthMenu: "Mostrando _MENU_ usuarios por página",
+            loadingRecords: "Cargando...",
+            processing: "",
+            search: "Buscar producto:",
+            zeroRecords: "No hay usuarios que coincidan con el filtro",
+            paginate: {
+                first: "Primero",
+                last: "Último",
+                next: "Siguiente",
+                previous: "Anterior"
+            },
+            aria: {
+                orderable: "Ordenar por esta columna",
+                orderableReverse: "Orden inverso de esta columna"
+            }
+        }
+    });
+
+    // Source: https://stackoverflow.com/a/21181021/4092887
+    $('#tbl_personas').removeClass('dataTable');
 }
