@@ -15,7 +15,7 @@ module.exports = function (conexion) {
                 console.log(msg, error)
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
@@ -24,7 +24,7 @@ module.exports = function (conexion) {
             if (filas.length === 0) {
                 msg = "No se encontraron marcas"
                 res.status(400).send({
-                    message: msg
+                    mensaje: msg
                 })
             }
             else {
@@ -51,7 +51,7 @@ module.exports = function (conexion) {
                 es_duplicado = -1;
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     error: error.code
                 });
                 return;
@@ -66,23 +66,23 @@ module.exports = function (conexion) {
                             console.log(msg, error)
 
                             res.status(500).send({
-                                message: msg,
+                                mensaje: msg,
                                 error: error.code
                             });
                         } else {
                             msg = "Marca creada con éxito"
                             res.status(201).send({
-                                message: msg,
+                                mensaje: msg,
                                 ID_MARCA: resultado.insertId
                             });
                         }
                     });
                 } else {
-                    msg = "Ya existe una marca con este nombre (" + [datos.NOMBRE_MARCA] + "). Cantidad: " + es_duplicado;
+                    msg = "Ya existe una marca con este nombre (" + [datos.NOMBRE_MARCA] + ")."; // Cantidad: " + es_duplicado;
                     console.log(msg)
 
                     res.status(500).send({
-                        message: msg
+                        mensaje: msg
                     });
                 }
             }
@@ -98,20 +98,20 @@ module.exports = function (conexion) {
 
         conexion.query(sql, [ID], (error, fila) => {
             if (error) {
-                msg = `Error al obtener la marca por el ID ${ID} especificado`
+                msg = `Error al obtener la marca especificada`
                 console.log(msg, error)
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
             }
 
             if (fila.length === 0) {
-                msg = `No se encontró marca con ID # (${ID})`
+                msg = `No se encontró marca`
                 res.status(400).send({
-                    message: msg
+                    mensaje: msg
                 })
             }
             else {
@@ -152,7 +152,7 @@ module.exports = function (conexion) {
                 es_duplicado = -1;
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     error: error.code
                 });
                 return;
@@ -160,17 +160,14 @@ module.exports = function (conexion) {
             else {
                 es_duplicado = fila[0].CONTEO;
 
-                //console.log("CONTEO!: " + es_duplicado + " - NOMBRE: " + datos);
-                //console.log("CONTEO!: " + es_duplicado + " - NOMBRE: (" + datos[0] + ")");
-
                 if (es_duplicado == 0) {
                     conexion.query(update_sql, datos, function (error, resultado) {
 
                         if (error) {
-                            msg = `Error al actualizar marca con ID (${ID_ITEM}). `;
+                            msg = `Error al actualizar la marca seleccionada. `;
                             console.error(msg, error);
                             res.status(500).send({
-                                message: msg,
+                                mensaje: msg,
                                 detalleError: error.code
                             });
                             return;
@@ -179,25 +176,25 @@ module.exports = function (conexion) {
                         // 2. Validación de Actualización: 
                         if (resultado.affectedRows === 0) {
                             // Error 404: Si la consulta no afectó ninguna fila, el ID no existe.
-                            msg = `No se encontró una marca con ID (${ID_ITEM}) para actualizar.`;
+                            msg = `No se encontró una marca para actualizar.`;
                             res.status(404).send({
-                                message: msg
+                                mensaje: msg
                             });
                         } else {
                             // Éxito 200: La marca fue encontrada y actualizada.
-                            msg = `Marca con ID ${ID_ITEM} actualizada correctamente.`
+                            msg = `Marca actualizada correctamente.`
                             res.status(200).send({
-                                message: msg,
+                                mensaje: msg,
                                 affectedRows: resultado.affectedRows
                             });
                         }
                     });
                 } else {
-                    msg = "Ya existe una marca con este nombre. Debe elegir otro nombre de marca. Cantidad: " + es_duplicado;
+                    msg = "Ya existe una marca con este nombre. Debe elegir otro nombre de marca."; // Cantidad: " + es_duplicado;
                     console.log(msg)
 
                     res.status(500).send({
-                        message: msg
+                        mensaje: msg
                     });
                 }
             }
@@ -214,10 +211,10 @@ module.exports = function (conexion) {
         conexion.query(sql, [ID], function (error, resultado) {
 
             if (error) {
-                msg = `Error al eliminar marca con ID # ${ID}:`;
+                msg = `Error al eliminar marca:`;
                 console.error(msg, error);
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
@@ -225,7 +222,7 @@ module.exports = function (conexion) {
             // Validación de Eliminación
             if (resultado.affectedRows === 0) {
                 // Si no se afectó ninguna fila, el producto no existe.
-                msg = `No se encontró la marca con ID ${ID} para eliminar.`;
+                msg = `No se encontró la marca para eliminar.`;
                 return res.status(404).json({
                     mensaje: msg
                 });

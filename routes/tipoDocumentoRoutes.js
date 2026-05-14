@@ -15,7 +15,7 @@ module.exports = function (conexion) {
                 console.log(msg, error)
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
@@ -24,7 +24,7 @@ module.exports = function (conexion) {
             if (filas.length === 0) {
                 msg = "No se encontraron tipos de documento"
                 res.status(400).send({
-                    message: msg
+                    mensaje: msg
                 })
             }
             else {
@@ -51,7 +51,7 @@ module.exports = function (conexion) {
                 es_duplicado = -1;
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     error: error.code
                 });
                 return;
@@ -66,23 +66,23 @@ module.exports = function (conexion) {
                             console.log(msg, error)
 
                             res.status(500).send({
-                                message: msg,
+                                mensaje: msg,
                                 error: error.code
                             });
                         } else {
                             msg = "Tipo de documento creado con éxito"
                             res.status(201).send({
-                                message: msg,
+                                mensaje: msg,
                                 ID_TIPO_DOCUMENTO: resultado.insertId
                             });
                         }
                     });
                 } else {
-                    msg = "Ya existe un tipo de documento con este nombre (" + datos.NOMBRE_DOCUMENTO + "). Cantidad: " + es_duplicado;
+                    msg = "Ya existe un tipo de documento con este nombre (" + datos.NOMBRE_DOCUMENTO + ")."; // Cantidad: " + es_duplicado;
                     console.log(msg)
 
                     res.status(500).send({
-                        message: msg
+                        mensaje: msg
                     });
                 }
             }
@@ -98,20 +98,20 @@ module.exports = function (conexion) {
 
         conexion.query(sql, [ID], (error, fila) => {
             if (error) {
-                msg = `Error al obtener el tipo de documento por el ID ${ID} especificado`
+                msg = `Error al obtener el tipo de documento especificado`
                 console.log(msg, error)
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
             }
 
             if (fila.length === 0) {
-                msg = `No se encontró un tipo de documento con ID # (${ID})`
+                msg = `No se encontró el tipo de documento`
                 res.status(400).send({
-                    message: msg
+                    mensaje: msg
                 })
             }
             else {
@@ -152,7 +152,7 @@ module.exports = function (conexion) {
                 es_duplicado = -1;
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     error: error.code
                 });
                 return;
@@ -165,10 +165,10 @@ module.exports = function (conexion) {
                     conexion.query(update_sql, datos, function (error, resultado) {
 
                         if (error) {
-                            msg = `Error al actualizar tipo de documento con ID (${ID_ITEM}). `;
+                            msg = `Error al actualizar tipo de documento seleccionado. `;
                             console.error(msg, error);
                             res.status(500).send({
-                                message: msg,
+                                mensaje: msg,
                                 detalleError: error.code
                             });
                             return;
@@ -176,24 +176,24 @@ module.exports = function (conexion) {
 
                         // 2. Validación de Actualización: 
                         if (resultado.affectedRows === 0) {
-                            msg = `No se encontró un tipo de documento con ID (${ID_ITEM}) para actualizar.`;
+                            msg = `No se encontró un tipo de documento para actualizar.`;
                             res.status(404).send({
-                                message: msg
+                                mensaje: msg
                             });
                         } else {
-                            msg = `Tipo de documento con ID ${ID_ITEM} actualizado correctamente.`
+                            msg = `Tipo de documento actualizado correctamente.`
                             res.status(200).send({
-                                message: msg,
+                                mensaje: msg,
                                 affectedRows: resultado.affectedRows
                             });
                         }
                     });
                 } else {
-                    msg = "Ya existe un tipo de documento con este nombre. Debe elegir otro nombre de tipo de documento. Cantidad: " + es_duplicado;
+                    msg = "Ya existe un tipo de documento con este nombre. Debe elegir otro nombre de tipo de documento."; // Cantidad: " + es_duplicado;
                     console.log(msg)
 
                     res.status(500).send({
-                        message: msg
+                        mensaje: msg
                     });
                 }
             }
@@ -210,23 +210,23 @@ module.exports = function (conexion) {
         conexion.query(sql, [ID], function (error, resultado) {
 
             if (error) {
-                msg = `Error al eliminar tipo de documento con ID # ${ID}:`;
+                msg = `Error al eliminar tipo de documento:`;
                 console.error(msg, error);
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
             }
             // Validación de Eliminación
             if (resultado.affectedRows === 0) {
-                msg = `No se encontró tipo de documento con ID ${ID} para eliminar.`;
+                msg = `No se encontró tipo de documento para eliminar.`;
                 return res.status(404).json({
                     mensaje: msg
                 });
             }
 
-            msg = "Tipo_documento eliminado correctamente.";
+            msg = "Tipo de documento eliminado correctamente.";
             res.status(200).json({
                 mensaje: msg
             });

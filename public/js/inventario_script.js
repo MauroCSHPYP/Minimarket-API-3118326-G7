@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const data = await response.json();
 
-                mostrar_mensaje(data.message);
+                mostrar_mensaje(data.mensaje);
                 if (data.affectedRows) {
                     recargar_tbl_prods_en_inventario();
                     limpiar_form_inventario();
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // response.ok && data.success
                 // response.ok && data.ID_PRODUCTO
 
-                mostrar_mensaje(data.message);
+                mostrar_mensaje(data.mensaje);
                 if (data.ID_INVENTARIO) {
                     recargar_tbl_prods_en_inventario();
                     limpiar_form_inventario();
@@ -138,11 +138,11 @@ async function recargar_tbl_prods_en_inventario() {
 
         const data = await response.json();
 
-        if (response.ok && !data.message) {
+        if (response.ok && !data.mensaje) {
             localStorage.setItem("productos_disponibles", JSON.stringify(data));
             load_dt_inventario_productos();
         } else {
-            mostrar_mensaje(data.message);
+            mostrar_mensaje(data.mensaje);
             return;
         }
 
@@ -166,16 +166,16 @@ async function seleccionar_producto_en_inventario(id_inventario) {
     try {
 
         if (id_inventario.indexOf("-") == -1) {
-            spn = document.getElementById("span_data_" + id_inventario);
+            spn = document.getElementById("inp_data_" + id_inventario);
         }
         else {
             create_invent = true;
             id_inventario = id_inventario.split('-')[1];
-            spn = document.getElementById("span_null_" + id_inventario);
+            spn = document.getElementById("inp_data_null_" + id_inventario);
         }
 
-        if (spn != null && spn.innerText != undefined) {
-            var data_inventario_prod = JSON.parse(spn.innerText);
+        if (spn != null && spn.value != undefined) {
+            var data_inventario_prod = JSON.parse(spn.value);
             document.getElementById("spn_index_producto").innerText = data_inventario_prod["ID_PRODUCTO"];
             document.getElementById("spn_index_inventario").innerText = (create_invent == false) ? id_inventario : "";
             document.getElementById('txt_nombre_producto').value = data_inventario_prod["NOMBRE_PRODUCTO"];
@@ -235,7 +235,6 @@ function load_dt_inventario_productos() {
 
     var ds_products = [];
     ds_products = JSON.parse(localStorage.getItem("productos_disponibles"));
-    var incr = 0;
 
     // Limpiar el objeto DataTable para operarlo con la nueva configuración.
     // Source: https://stackoverflow.com/a/52284422/4092887
@@ -316,14 +315,14 @@ function load_dt_inventario_productos() {
                 // Source: https://datatables.net/examples/basic_init/data_rendering.html
                 render: function (data, type, row) {
                     if (type === 'display') {
-                        var control_id = row["ID_INVENTARIO"] == null ? "span_null_" + row["ID_PRODUCTO"] : "span_data_" + row["ID_INVENTARIO"];
+                        var control_id = row["ID_INVENTARIO"] == null ? "inp_data_null_" + row["ID_PRODUCTO"] : "inp_data_" + row["ID_INVENTARIO"];
                         var id_to_set = row["ID_INVENTARIO"] == null ? "-" + row["ID_PRODUCTO"] : row["ID_INVENTARIO"];
                         var edit_or_create = (!row["CANTIDAD"]) ? "Crear" : "Editar";
 
                         if (row["ID_INVENTARIO"] == null) {
-                            return `<a href='#' onclick='seleccionar_producto_en_inventario("${id_to_set}")' title='Crear el inventario para este producto.'>${edit_or_create}</a><span id='${control_id}' class='hdf_data'>${JSON.stringify(row)}</span>`;
+                            return `<a href='#' onclick='seleccionar_producto_en_inventario("${id_to_set}")' title='Crear el inventario para este producto.'>${edit_or_create}</a><input type='hidden' id='${control_id}' value='${JSON.stringify(row)}' class='hdf_data' />`;
                         } else {
-                            return `<a href='#' onclick='seleccionar_producto_en_inventario("${id_to_set}")' title='Editar la cantidad en existencia de este producto.'>${edit_or_create}</a> - <a href='#' onclick='eliminar_inventario_del_producto("${id_to_set}")' title='Reduce el inventario de este producto a 0.'>Eliminar</a><span id='${control_id}' class='hdf_data'>${JSON.stringify(row)}</span>`;
+                            return `<a href='#' onclick='seleccionar_producto_en_inventario("${id_to_set}")' title='Editar la cantidad en existencia de este producto.'>${edit_or_create}</a> - <a href='#' onclick='eliminar_inventario_del_producto("${id_to_set}")' title='Reduce el inventario de este producto a 0.'>Eliminar</a><input type='hidden' id='${control_id}' value='${JSON.stringify(row)}' class='hdf_data' />`;
                         }
                     }
 

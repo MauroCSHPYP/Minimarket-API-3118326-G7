@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
             } else {
-                mostrar_mensaje(data.message);
+                mostrar_mensaje(data.mensaje);
                 return;
             }
         } catch (ex) {

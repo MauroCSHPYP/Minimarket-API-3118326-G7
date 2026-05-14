@@ -84,7 +84,7 @@ module.exports = function (conexion) {
                         }
                     });
                 } else {
-                    msg = "Ya existe un producto con este nombre (" + [datos.NOMBRE_PRODUCTO] + "). Cantidad: " + es_duplicado;
+                    msg = "Ya existe un producto con este nombre (" + [datos.NOMBRE_PRODUCTO] + ").";// Cantidad: " + es_duplicado;
                     console.log(msg)
 
                     res.status(500).send({
@@ -165,9 +165,6 @@ module.exports = function (conexion) {
         var msg = "";
 
         // Validación de duplicados: 
-        // PROBAR! datos[NOMBRE_PRODUCTO]
-        //console.log(datos);
-        //console.log("=> NOMBRE_PRODUCTO: (" + datos[2] + ")");
         conexion.query(check_sql, datos[2], (error, fila) => {
             if (error) {
                 msg = `Error al validar duplicidad de producto`;
@@ -215,7 +212,7 @@ module.exports = function (conexion) {
                         }
                     });
                 } else {
-                    msg = "Ya existe un producto con este nombre. Debe elegir otro nombre de producto. Cantidad: " + es_duplicado;
+                    msg = "Ya existe un producto con este nombre. Debe elegir otro nombre de producto."; // Cantidad: " + es_duplicado;
                     console.log(msg)
 
                     res.status(500).send({

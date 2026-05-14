@@ -118,6 +118,10 @@ function crear_menu() {
                 // Opciones del menú para "Administrador":
                 opciones_menu.push("Registrar usuario|registrar usuario.html");
                 opciones_menu.push("Registrar producto|registrar producto.html");
+                opciones_menu.push("Tipos de unidades|tipo unidad.html");
+                opciones_menu.push("Tipos de documento|registrar detalle.html");
+                opciones_menu.push("Marcas|registrar detalle.html");
+                opciones_menu.push("Tipos de producto|tipo producto.html");
                 opciones_menu.push("Inventario|inventario.html");
                 html_menu += agregar_lista_en_menu("Administrador ", opciones_menu);
 
@@ -162,6 +166,7 @@ function agregar_lista_en_menu(texto_encabezado, opciones_menu) {
     var html_opciones = ""; // Contiene las opciones "en HTML" creadas por la función "agregar_opcion_menu(texto, ruta)".
     var temp_texto = "";
     var temp_ruta = "";
+    var valor_opcional = "";
 
     try {
 
@@ -175,7 +180,24 @@ function agregar_lista_en_menu(texto_encabezado, opciones_menu) {
             for (var i = 0; i < opciones_menu.length; i++) {
                 temp_texto = opciones_menu[i].split('|')[0];
                 temp_ruta = opciones_menu[i].split('|')[1];
-                html_opciones += agregar_opcion_menu(temp_texto, temp_ruta);
+
+                try {
+                    switch (temp_texto.trim().toUpperCase()) {
+                        case "Tipos de documento".toUpperCase():
+                            valor_opcional = "TIPO_DOCUMENTO";
+                            break;
+                        case "Marcas".toUpperCase():
+                            valor_opcional = "MARCA";
+                            break;
+                        default:
+                            valor_opcional = "";
+                            break;
+                    }
+                } catch (ex_sp) {
+                    valor_opcional = "";
+                }
+
+                html_opciones += agregar_opcion_menu(temp_texto, temp_ruta, valor_opcional);
             }
         }
 
@@ -195,16 +217,24 @@ function agregar_lista_en_menu(texto_encabezado, opciones_menu) {
  * Agregar opción de menú.
  * @param {string} texto es el texto y el título a mostrar en la opción/ítem en el menú.
  * @param {string} ruta es la URL de la opción/ítem en el menú.
+ * @param {string} valor es el valor a establecer en variable de sesión "pagina_detalle" - opcional.
  * @returns 
  */
-function agregar_opcion_menu(texto, ruta) {
+function agregar_opcion_menu(texto, ruta, valor) {
 
-    var opcion_menu = "<a href='{0}' title='{1}'>{1}</a>";
+    var opcion_menu = "<a href='{0}' title='{1}' onclick='setCustomValue(\"{2}\")'>{1}</a>";
+
+    try {
+        if (!valor) {
+            valor = "";
+        }
+    } catch { valor = ""; }
 
     try {
         opcion_menu = opcion_menu.replace("{0}", ruta);
         opcion_menu = opcion_menu.replace("{1}", texto);
         opcion_menu = opcion_menu.replace("{1}", texto);
+        opcion_menu = opcion_menu.replace("{2}", valor);
 
     } catch (ex) {
         opcion_menu = "";
@@ -383,5 +413,17 @@ async function cargar_tabla_detalle(endpoint_url, detail_name) {
         mostrar_mensaje('No se pudo cargar la información del detalle.');
         console.log(ex);
         return;
+    }
+}
+
+/**
+ * Función para establecer variable de sesión y permitir la administración de las tablas de detalle.
+ * @param {string} e Valor a establecer en la variable de sesión "pagina_detalle".
+ */
+function setCustomValue(e) {
+    try {
+        localStorage.setItem("pagina_detalle", e);
+    } catch (error) {
+        localStorage.setItem("pagina_detalle", "");
     }
 }

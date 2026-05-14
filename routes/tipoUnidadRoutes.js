@@ -15,7 +15,7 @@ module.exports = function (conexion) {
                 console.log(msg, error)
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
@@ -24,7 +24,7 @@ module.exports = function (conexion) {
             if (filas.length === 0) {
                 msg = "No se encontraron tipos de unidad"
                 res.status(400).send({
-                    message: msg
+                    mensaje: msg
                 })
             }
             else {
@@ -51,7 +51,7 @@ module.exports = function (conexion) {
                 es_duplicado = -1;
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     error: error.code
                 });
                 return;
@@ -66,23 +66,23 @@ module.exports = function (conexion) {
                             console.log(msg, error)
 
                             res.status(500).send({
-                                message: msg,
+                                mensaje: msg,
                                 error: error.code
                             });
                         } else {
                             msg = "Tipo de unidad creada con éxito"
                             res.status(201).send({
-                                message: msg,
+                                mensaje: msg,
                                 ID_TIPO_UNIDAD: resultado.insertId
                             });
                         }
                     });
                 } else {
-                    msg = "Ya existe un tipo de unidad con este nombre (" + [datos.NOMBRE_UNIDAD] + "). Cantidad: " + es_duplicado;
+                    msg = "Ya existe un tipo de unidad con este nombre (" + [datos.NOMBRE_UNIDAD] + ")."; // Cantidad: " + es_duplicado;
                     console.log(msg)
 
                     res.status(500).send({
-                        message: msg
+                        mensaje: msg
                     });
                 }
             }
@@ -98,20 +98,20 @@ module.exports = function (conexion) {
 
         conexion.query(sql, [ID], (error, fila) => {
             if (error) {
-                msg = `Error al obtener el tipo de unidad por el ID ${ID} especificado`
+                msg = `Error al obtener los detalles del tipo de unidad especificado`
                 console.log(msg, error)
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
             }
 
             if (fila.length === 0) {
-                msg = `No se encontró tipo de unidad con ID # (${ID})`
+                msg = `No se encontró el tipo de unidad`
                 res.status(400).send({
-                    message: msg
+                    mensaje: msg
                 })
             }
             else {
@@ -152,7 +152,7 @@ module.exports = function (conexion) {
                 es_duplicado = -1;
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     error: error.code
                 });
                 return;
@@ -164,10 +164,10 @@ module.exports = function (conexion) {
                     conexion.query(update_sql, datos, function (error, resultado) {
 
                         if (error) {
-                            msg = `Error al actualizar el tipo unidad con ID (${ID_ITEM}). `;
+                            msg = `Error al actualizar el tipo unidad seleccionado. `;
                             console.error(msg, error);
                             res.status(500).send({
-                                message: msg,
+                                mensaje: msg,
                                 detalleError: error.code
                             });
                             return;
@@ -176,24 +176,24 @@ module.exports = function (conexion) {
                         // 2. Validación de Actualización: 
                         if (resultado.affectedRows === 0) {
                             // Error 404: Si la consulta no afectó ninguna fila, el ID no existe.
-                            msg = `No se encontró un tipo de unidad con ID (${ID_ITEM}) para actualizar.`;
+                            msg = `No se encontró un tipo de unidad para actualizar.`;
                             res.status(404).send({
-                                message: msg
+                                mensaje: msg
                             });
                         } else {
-                            msg = `Tipo de unidad con ID ${ID_ITEM} actualizada correctamente.`
+                            msg = `Tipo de unidad actualizado correctamente.`
                             res.status(200).send({
-                                message: msg,
+                                mensaje: msg,
                                 affectedRows: resultado.affectedRows
                             });
                         }
                     });
                 } else {
-                    msg = "Ya existe un tipo de unidad con este nombre. Debe elegir otro nombre de tipo de unidad. Cantidad: " + es_duplicado;
+                    msg = "Ya existe un tipo de unidad con este nombre. Debe elegir otro nombre de tipo de unidad."; // Cantidad: " + es_duplicado;
                     console.log(msg)
 
                     res.status(500).send({
-                        message: msg
+                        mensaje: msg
                     });
                 }
             }
@@ -210,23 +210,23 @@ module.exports = function (conexion) {
         conexion.query(sql, [ID], function (error, resultado) {
 
             if (error) {
-                msg = `Error al eliminar tipo de unidad con ID # ${ID}:`;
+                msg = `Error al eliminar el tipo de unidad`;
                 console.error(msg, error);
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
             }
             // Validación de Eliminación
             if (resultado.affectedRows === 0) {
-                msg = `No se encontró el tipo de unidad con ID ${ID} para eliminar.`;
+                msg = `No se encontró el tipo de unidad para eliminar.`;
                 return res.status(404).json({
                     mensaje: msg
                 });
             }
 
-            msg = "Tipo de unidad eliminada correctamente.";
+            msg = "Tipo de unidad eliminado correctamente.";
             res.status(200).json({
                 mensaje: msg
             });

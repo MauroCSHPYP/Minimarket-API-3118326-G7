@@ -285,7 +285,7 @@ function seleccionar_producto(ind_producto) {
     try {
 
         // Cargar el producto seleccionado.
-        temp_prod_seleccionado = JSON.parse(document.getElementById("span_data_" + ind_producto).innerText);
+        temp_prod_seleccionado = JSON.parse(document.getElementById("inp_data_" + ind_producto).value);
 
         // Establecer los valores en los campos del formulario: 
         document.getElementById("txt_nombre_producto").value = temp_prod_seleccionado["NOMBRE_PRODUCTO"];
@@ -470,7 +470,7 @@ function load_dt_productos() {
                 render: function (data, type, row) {
                     if (type === 'display') {
                         //console.log(row);
-                        return "<a href='#' onclick='seleccionar_producto(" + data + ")'>Seleccionar</a><span id='span_data_" + data + "' class='hdf_data'>" + JSON.stringify(row) + "</span>";
+                        return "<a href='#' onclick='seleccionar_producto(" + data + ")'>Seleccionar</a><input type='hidden' id='inp_data_" + data + "' value='" + JSON.stringify(row) + "' class='hdf_data' />";
                     }
 
                     return data;

@@ -155,9 +155,9 @@ async function recargar_tabla_productos() {
  */
 async function seleccionar_producto(id_product) {
     try {
-        var spn = document.getElementById("span_data_" + id_product);
+        var spn = document.getElementById("inp_data_" + id_product);
         if (spn.innerText != undefined) {
-            var data_product = JSON.parse(spn.innerText);
+            var data_product = JSON.parse(spn.value);
             document.getElementById("spn_index_producto").innerText = data_product["ID_PRODUCTO"];
             document.getElementById('txt_nombre_producto').value = data_product["NOMBRE_PRODUCTO"];
             //obtener_nombre_detalle("TIPO_PRODUCTO", data_product["ID_TIPO_PRODUCTO"], "ID_TIPO_PRODUCTO", "NOMBRE_TIPO_PRODUCTO");
@@ -209,7 +209,6 @@ function load_dt_productos() {
 
     var ds_products = [];
     ds_products = JSON.parse(localStorage.getItem("productos_disponibles"));
-    var incr = 0;
 
     // Limpiar el objeto DataTable para operarlo con la nueva configuración.
     // Source: https://stackoverflow.com/a/52284422/4092887
@@ -263,7 +262,7 @@ function load_dt_productos() {
                 data: 'ID_PRODUCTO', targets: 5, searchable: false, title: "Acción",
                 render: function (data, type, row) {
                     if (type === 'display') {
-                        return `<a href='#' id='lnk_edit_${row["ID_PRODUCTO"]}' onclick='seleccionar_producto("${row["ID_PRODUCTO"]}")'>Editar</a> - <a href='#' id='lnk_delete_${row["ID_PRODUCTO"]}' onclick='eliminar_producto("${row["ID_PRODUCTO"]}")'>Eliminar</a><span id='span_data_${row["ID_PRODUCTO"]}' class='hdf_data'>${JSON.stringify(row)}</span>`;
+                        return `<a href='#' id='lnk_edit_${row["ID_PRODUCTO"]}' onclick='seleccionar_producto("${row["ID_PRODUCTO"]}")'>Editar</a> - <a href='#' id='lnk_delete_${row["ID_PRODUCTO"]}' onclick='eliminar_producto("${row["ID_PRODUCTO"]}")'>Eliminar</a><input type='hidden' id='inp_data_${row["ID_PRODUCTO"]}' value='${JSON.stringify(row)}' class='hdf_data' />`;
                     }
 
                     return data;

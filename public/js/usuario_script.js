@@ -42,12 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
         } else {
-            alias = txt_nombres.substring(0, 3) + apellidos.substring(0, 3) + num_doc.substring(0, 3);
+            alias = nombres.substring(0, 3) + apellidos.substring(0, 3) + num_doc.substring(0, 3);
             contrasena = num_doc;
             confirm_contrasena = num_doc;
         }
 
-        if (!txt_nombres) {
+        if (!nombres) {
             msg = "El nombre es requerido";
         }
         if (!apellidos) {
@@ -186,9 +186,9 @@ async function recargar_tabla_personas() {
  */
 async function seleccionar_usuario(id_user) {
     try {
-        var spn = document.getElementById("span_data_" + id_user);
+        var spn = document.getElementById("inp_data_" + id_user);
         if (spn.innerText != undefined) {
-            var data_user = JSON.parse(spn.innerText);
+            var data_user = JSON.parse(spn.value);
             document.getElementById("spn_index_persona").innerText = data_user["ID_USUARIO"];
             document.getElementById('txt_nombres').value = data_user["NOMBRE"];
             document.getElementById('txt_apellidos').value = data_user["APELLIDOS"];
@@ -245,7 +245,6 @@ function load_dt_usuarios() {
 
     var ds_staff = [];
     ds_staff = JSON.parse(localStorage.getItem("personas_disponibles"));
-    var incr = 0;
 
     // Limpiar el objeto DataTable para operarlo con la nueva configuración.
     // Source: https://stackoverflow.com/a/52284422/4092887
@@ -288,7 +287,7 @@ function load_dt_usuarios() {
                 data: 'ID_USUARIO', targets: 3, searchable: false, title: "Acción",
                 render: function (data, type, row) {
                     if (type === 'display') {
-                        return `<a href='#' id='lnk_edit_${row["ID_USUARIO"]}' onclick='seleccionar_usuario("${row["ID_USUARIO"]}")'>Editar</a> - <a href='#' id='lnk_delete_${row["ID_USUARIO"]}' onclick='eliminar_persona("${row["ID_USUARIO"]}")'>Eliminar</a><span id='span_data_${row["ID_USUARIO"]}' class='hdf_data'>${JSON.stringify(row)}</span>`;
+                        return `<a href='#' id='lnk_edit_${row["ID_USUARIO"]}' onclick='seleccionar_usuario("${row["ID_USUARIO"]}")'>Editar</a> - <a href='#' id='lnk_delete_${row["ID_USUARIO"]}' onclick='eliminar_persona("${row["ID_USUARIO"]}")'>Eliminar</a><input type='hidden' id='inp_data_${row["ID_USUARIO"]}' value='${JSON.stringify(row)}' class='hdf_data' />`;
                     }
 
                     return data;

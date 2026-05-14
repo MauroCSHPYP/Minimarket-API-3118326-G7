@@ -20,7 +20,7 @@ ON I.ID_PRODUCTO = P.ID_PRODUCTO;`;
                 console.log(msg, error)
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
@@ -29,7 +29,7 @@ ON I.ID_PRODUCTO = P.ID_PRODUCTO;`;
             if (filas.length === 0) {
                 msg = "No se encontraron inventarios"
                 res.status(400).send({
-                    message: msg
+                    mensaje: msg
                 })
             }
             else {
@@ -57,7 +57,7 @@ ON I.ID_PRODUCTO = P.ID_PRODUCTO;`;
                 es_duplicado = -1;
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     error: error.code
                 });
                 return;
@@ -72,13 +72,13 @@ ON I.ID_PRODUCTO = P.ID_PRODUCTO;`;
                             console.log(msg, error)
 
                             res.status(500).send({
-                                message: msg,
+                                mensaje: msg,
                                 error: error.code
                             });
                         } else {
                             msg = "Inventario creado con éxito"
                             res.status(201).send({
-                                message: msg,
+                                mensaje: msg,
                                 ID_INVENTARIO: resultado.insertId
                             });
                         }
@@ -88,7 +88,7 @@ ON I.ID_PRODUCTO = P.ID_PRODUCTO;`;
                     console.log(msg)
 
                     res.status(500).send({
-                        message: msg
+                        mensaje: msg
                     });
                 }
             }
@@ -108,7 +108,7 @@ ON I.ID_PRODUCTO = P.ID_PRODUCTO;`;
                 console.log(msg, error)
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
@@ -117,7 +117,7 @@ ON I.ID_PRODUCTO = P.ID_PRODUCTO;`;
             if (fila.length === 0) {
                 msg = `No se encontró un inventario para el producto seleccionado`
                 res.status(400).send({
-                    message: msg
+                    mensaje: msg
                 })
             }
             else {
@@ -160,7 +160,7 @@ ON I.ID_PRODUCTO = P.ID_PRODUCTO;`;
                 es_duplicado = -1;
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     error: error.code
                 });
                 return;
@@ -175,7 +175,7 @@ ON I.ID_PRODUCTO = P.ID_PRODUCTO;`;
                             msg = `Error al actualizar inventario del producto seleccionado. `;
                             console.error(msg, error);
                             return res.status(500).send({
-                                message: msg,
+                                mensaje: msg,
                                 detalleError: error.code
                             });
                         }
@@ -184,13 +184,13 @@ ON I.ID_PRODUCTO = P.ID_PRODUCTO;`;
                         if (resultado.affectedRows === 0) {
                             msg = `No se encontró un inventario asignado al producto seleccionado.`;
                             return res.status(404).send({
-                                message: msg
+                                mensaje: msg
                             });
                         } else {
                             //msg = `Inventario con ID ${ID_ITEM} actualizado correctamente.`
                             msg = `Inventario actualizado correctamente.`
                             return res.status(200).send({
-                                message: msg,
+                                mensaje: msg,
                                 affectedRows: resultado.affectedRows
                             });
                         }
@@ -200,7 +200,7 @@ ON I.ID_PRODUCTO = P.ID_PRODUCTO;`;
                     console.log(msg)
 
                     return res.status(500).send({
-                        message: msg
+                        mensaje: msg
                     });
                 }
             }
@@ -220,7 +220,7 @@ ON I.ID_PRODUCTO = P.ID_PRODUCTO;`;
                 msg = `Error al eliminar el inventario del producto seleccionado`;
                 console.error(msg, error);
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;

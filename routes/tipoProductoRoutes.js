@@ -15,7 +15,7 @@ module.exports = function (conexion) {
                 console.log(msg, error)
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
@@ -24,7 +24,7 @@ module.exports = function (conexion) {
             if (filas.length === 0) {
                 msg = "No se encontraron tipos de producto"
                 res.status(400).send({
-                    message: msg
+                    mensaje: msg
                 })
             }
             else {
@@ -53,7 +53,7 @@ module.exports = function (conexion) {
                 es_duplicado = -1;
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     error: error.code
                 });
                 return;
@@ -68,23 +68,23 @@ module.exports = function (conexion) {
                             console.log(msg, error)
 
                             res.status(500).send({
-                                message: msg,
+                                mensaje: msg,
                                 error: error.code
                             });
                         } else {
                             msg = "Tipo de producto creado con éxito"
                             res.status(201).send({
-                                message: msg,
+                                mensaje: msg,
                                 ID_TIPO_PRODUCTO: resultado.insertId
                             });
                         }
                     });
                 } else {
-                    msg = "Ya existe un tipo de producto con este nombre (" + [datos.NOMBRE_TIPO_PRODUCTO] + "). Cantidad: " + es_duplicado;
+                    msg = "Ya existe un tipo de producto con este nombre (" + [datos.NOMBRE_TIPO_PRODUCTO] + ")."; // Cantidad: " + es_duplicado;
                     console.log(msg)
 
                     res.status(500).send({
-                        message: msg
+                        mensaje: msg
                     });
                 }
             }
@@ -100,20 +100,20 @@ module.exports = function (conexion) {
 
         conexion.query(sql, [ID], (error, fila) => {
             if (error) {
-                msg = `Error al obtener el tipo de producto por el ID ${ID} especificado`
+                msg = `Error al obtener el tipo de producto especificado`
                 console.log(msg, error)
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
             }
 
             if (fila.length === 0) {
-                msg = `No se encontró tipo de producto con ID # (${ID})`
+                msg = `No se encontró el tipo de producto`
                 res.status(400).send({
-                    message: msg
+                    mensaje: msg
                 })
             }
             else {
@@ -158,7 +158,7 @@ module.exports = function (conexion) {
                 es_duplicado = -1;
 
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     error: error.code
                 });
                 return;
@@ -170,10 +170,10 @@ module.exports = function (conexion) {
                     conexion.query(update_sql, datos, function (error, resultado) {
 
                         if (error) {
-                            msg = `Error al actualizar el tipo de producto con ID (${ID_ITEM}). `;
+                            msg = `Error al actualizar el tipo de producto. `;
                             console.error(msg, error);
                             res.status(500).send({
-                                message: msg,
+                                mensaje: msg,
                                 detalleError: error.code
                             });
                             return;
@@ -181,24 +181,24 @@ module.exports = function (conexion) {
 
                         // 2. Validación de Actualización: 
                         if (resultado.affectedRows === 0) {
-                            msg = `No se encontró un tipo de producto con ID (${ID_ITEM}) para actualizar.`;
+                            msg = `No se encontró un tipo de producto para actualizar.`;
                             res.status(404).send({
-                                message: msg
+                                mensaje: msg
                             });
                         } else {
-                            msg = `Tipo de producto con ID ${ID_ITEM} actualizado correctamente.`
+                            msg = `Tipo de producto actualizado correctamente.`
                             res.status(200).send({
-                                message: msg,
+                                mensaje: msg,
                                 affectedRows: resultado.affectedRows
                             });
                         }
                     });
                 } else {
-                    msg = "Ya existe un tipo de producto con este nombre. Debe elegir otro nombre de tipo de producto. Cantidad: " + es_duplicado;
+                    msg = "Ya existe un tipo de producto con este nombre. Debe elegir otro nombre de tipo de producto.";// Cantidad: " + es_duplicado;
                     console.log(msg)
 
                     res.status(500).send({
-                        message: msg
+                        mensaje: msg
                     });
                 }
             }
@@ -215,17 +215,17 @@ module.exports = function (conexion) {
         conexion.query(sql, [ID], function (error, resultado) {
 
             if (error) {
-                msg = `Error al eliminar tipo de producto con ID # ${ID}:`;
+                msg = `Error al eliminar tipo de producto.`;
                 console.error(msg, error);
                 res.status(500).send({
-                    message: msg,
+                    mensaje: msg,
                     detalleError: error.code
                 });
                 return;
             }
             // Validación de Eliminación
             if (resultado.affectedRows === 0) {
-                msg = `No se encontró el tipo de producto con ID ${ID} para eliminar.`;
+                msg = `No se encontró el tipo de producto para eliminar.`;
                 return res.status(404).json({
                     mensaje: msg
                 });

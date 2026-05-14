@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página principal - Minimarket</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</head>
+
+<body>
+    <main class="principal">
+        <header class="encabezado">
+            <img src="../img/image_3.jpg" alt="logo temporal" width="120px" height="80px" title="Logotipo Minimarket" />
+        </header>
+        <div class="topnav" id="myTopnav"></div>
+        <div class="cuerpo">
+            <h1>Minimarket</h1>
+            <h2>Registrar tipos de productos</h2>
+            <form id="frmTipoProducto">
+                <span id="spn_index_tp" style="display: none;"></span>
+                <span>Nombre:</span>
+                <input type="text" class="input-texto" id="txt_nombre_tp" maxlength="200" required /><br />
+                <span>Descripción:</span>
+                <textarea class="input-texto" id="txt_descripcion_tp" rows="5" cols="20" maxlength="250"
+                    required></textarea>
+                <span>Tipo de unidad:</span>
+                <select id="ddlTipoUnidad" class="lista_css"></select><br />
+                <button type="submit" class="boton-enviar" id="btn_registrar" title="Guardar cambios">Guardar</button>
+            </form>
+            <br />
+            <div id="div_dynamic_table_tp">
+                <h4>Tipos de productos</h4>
+                <i>En esta sección se muestran los tipos de productos disponibles para su asignación <br />
+                    a los <a href="registrar producto.html">productos</a> disponibles en la aplicación de
+                    Minimarket.</i>
+                <table id="tbl_tp"></table>
+            </div>
+            <p class="texto parrafo">
+                Página en construcción - prototipo
+            </p>
+        </div>
+    </main>
+    <footer class="pie">
+        <a href="#" id="link_contacto"></a>
+    </footer>
+    <script type="text/javascript" src="../js/general.js"></script>
+    <script type="text/javascript" src="../js/tipo_producto_script.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/2.3.8/js/dataTables.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.css" />
+    <!-- Fuente: https://stackoverflow.com/a/9899701/4092887 -->
+    <script>
+        (function () {
+            document.getElementById("link_contacto").innerText = "Derechos reservados © (" + new Date().getFullYear() + ") - contáctenos";
+            comprobar_sesion();
+            recargar_tipos_productos();
+        })();
+    </script>
+</body>
+
+</html>
