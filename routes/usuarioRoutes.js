@@ -6,7 +6,7 @@ const ruta = express.Router();
 module.exports = function (conexion) {
     // Obtener todos los usuarios:
     ruta.get('/usuarios', (req, res) => {
-        const sql = 'SELECT * from usuario';
+        const sql = 'SELECT ID_USUARIO, NOMBRE, APELLIDOS, DATE_FORMAT(FECHA_NACIMIENTO, "%d/%m/%Y") AS FECHA_NACIMIENTO, ID_TIPO_DOCUMENTO, ID_ROL, NUMERO_IDENTIFICACION, ALIAS, CONTRASENA FROM usuario';
         var msg = "";
 
         conexion.query(sql, (error, filas) => {

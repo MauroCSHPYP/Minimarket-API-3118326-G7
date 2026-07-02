@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (!nombres) {
-            msg = "El nombre es requerido";
+            msg = "El nombre es requerido" + text_break_line;
         }
         if (!apellidos) {
             msg += "El campo 'apellido(s)' es requerido." + text_break_line;
@@ -259,30 +259,7 @@ function load_dt_usuarios() {
         columnDefs: [
             { data: 'NOMBRE', targets: 0, title: "Nombre(s)" },
             { data: 'APELLIDOS', targets: 1, title: "Apellidos" },
-            {
-                data: 'FECHA_NACIMIENTO', targets: 2, title: "Fecha de nacimiento",
-                render: function (data, type, row) {
-                    var fecha_user = "";
-                    if (type === 'display') {
-
-                        try {
-                            fecha_user = data.split("T")[0];
-                            fecha_user = new Date(fecha_user);
-                            fecha_user = addZero(fecha_user.getDate() + 1) + "/" + addZero((fecha_user.getMonth() + 1)) + "/" + fecha_user.getFullYear();
-                        }
-                        catch (ex) {
-                            console.log("Error al formatear la fecha: ");
-                            console.log(ex);
-                            fecha_user = data;
-                        }
-
-
-                        return fecha_user;
-                    }
-
-                    return data;
-                }
-            },
+            { data: 'FECHA_NACIMIENTO', targets: 2, title: "Fecha de nacimiento" },
             {
                 data: 'ID_USUARIO', targets: 3, searchable: false, title: "Acción",
                 render: function (data, type, row) {
