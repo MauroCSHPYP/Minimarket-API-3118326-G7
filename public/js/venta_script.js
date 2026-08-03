@@ -59,9 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 limpiar_form_venta();
                 localStorage.removeItem("arr_prods_en_caja");
                 cargar_tabla_productos_en_caja();
+                // Abrir factura a imprimir: 
+                window.open("../html/ticket.html?q=fct101&factura_id=" + data.id_ticket_generado, "_blank");
+            } else {
+                // Modificación (31/07/2026): Solo mostrar alerta cuando no se pudo completar la venta.
+                mostrar_mensaje(msg);
             }
-
-            mostrar_mensaje(msg);
 
             return;
 

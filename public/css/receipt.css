@@ -1,0 +1,102 @@
+/*
+    Sources: 
+    https://github.com/mtottrup/restaurant-pos-gas/blob/main/script-js.html#L243
+    https://elementor.com/blog/es/como-centrar-una-tabla-en-css-html/
+    https://jsfiddle.net/MauricioSOes/9dtL23zr/1/
+*/
+
+.table-container {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-top: 5px;
+}
+
+.order {
+    background-color: white;
+    flex: 0 0 440px;
+    overflow: auto;
+}
+
+.receipt {
+    border: solid 0.5px;
+    margin: 10px 15px 5px 15px;
+    box-shadow: 3px 3px 2px rgb(3, 3, 3);
+    user-select: none;
+    flex-grow: 1;
+}
+
+.receipt,
+.company-info,
+.receipt-footer {
+    align-items: center;
+    width: 50%;
+}
+
+.company-info {
+    margin-top: 5px;
+}
+
+th.description {
+    width: 180px;
+    text-align: left;
+}
+
+th.price {
+    width: 70px;
+}
+
+th.subtotal {
+    width: 75px;
+}
+
+.quantity,
+.price,
+.subtotal,
+.delete {
+    text-align: right;
+}
+
+.receipt-details {
+    margin-top: 10px;
+    flex-grow: 1;
+}
+
+.dotted-border {
+    border-bottom: dotted 2px;
+}
+
+.fa-backspace:hover {
+    transform: scale(1.2);
+}
+
+table.summary-table {
+    text-align: right;
+}
+
+tbody.summary-table td:nth-child(1) {
+    width: 277px;
+}
+
+tbody.summary-table td:nth-child(2) {
+    width: 75px;
+}
+
+tbody.summary-table td:nth-child(3) {
+    width: 25px;
+}
+
+.receipt-footer {
+    padding-top: 20px;
+}
+
+#barcode {
+    font-family: 'Libre Barcode 128', cursive;
+    font-size: 70px;
+    margin-top: 10px;
+}
+
+.div-subtotal {
+    font-weight: bold;
+    font-style: italic;
+}

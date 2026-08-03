@@ -10,6 +10,7 @@ const rolRoutes = require('./routes/rolRoutes');
 const tipoDocumentoRoutes = require('./routes/tipoDocumentoRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes');
 const ticketRoutes = require('./routes/ticketRoutes');
+const reportesRoutes = require('./routes/reportesRoutes');
 
 var app = express();
 app.use(express.json());
@@ -53,3 +54,4 @@ app.use('/app', rolRoutes(conexion));
 app.use('/app', tipoDocumentoRoutes(conexion));
 app.use('/app', usuarioRoutes(conexion));
 app.use('/app', ticketRoutes(conexion));
+app.use('/app', reportesRoutes(conexion));

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página principal - Minimarket</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <!-- Código de prueba - Datepicker - JQuery. -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://jqueryui.com/wp-content/themes/jqueryui.com/style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</head>
+
+<body>
+    <main class="principal">
+        <header class="encabezado">
+            <img src="../img/image_3.jpg" alt="logo temporal" width="120px" height="80px" title="Logotipo Minimarket" />
+        </header>
+        <div class="topnav" id="myTopnav"></div>
+        <div class="cuerpo">
+            <h1>Minimarket</h1>
+            <h2>Reportes</h2>
+            <form id="frmReportes">
+                <span>Seleccione el tipo de reporte:</span>
+                <select id="ddl_reportes" class="lista_css" onchange="checkSelectedReport()">
+                    <option value="0">-- Seleccione--</option>
+                    <option value="rpt_productos_vendidos">Productos vendidos</option>
+                </select>
+                <span>Fecha de inicio:</span>
+                <input type="text" class="input-texto" id="datepicker_ini" maxlength="10" required />
+                <span>Fecha fin <i>(opcional)</i>:</span>
+                <input type="text" class="input-texto" id="datepicker_fin" maxlength="10" />
+                <button type="submit" class="boton-enviar" id="btn_generar_reporte" title="Generar reporte">Generar
+                    reporte</button>
+                <div id="piechart"></div>
+            </form>
+            <br />
+            <p class="texto parrafo">
+                Página en construcción - prototipo
+            </p>
+        </div>
+    </main>
+    <footer class="pie">
+        <a href="#" id="link_contacto"></a>
+    </footer>
+    <script type="text/javascript" src="../js/general.js"></script>
+    <script type="text/javascript" src="../js/reporte_script.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/2.3.8/js/dataTables.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.css" />
+    <!-- Fuente: https://stackoverflow.com/a/9899701/4092887 -->
+    <script>
+        (function () {
+            document.getElementById("link_contacto").innerText = "Derechos reservados © (" + new Date().getFullYear() + ") - contáctenos";
+            comprobar_sesion();
+        })();
+
+        $("#datepicker_ini").datepicker({
+            format: 'dd/MM/yyyy'
+        });
+        $("#datepicker_ini").datepicker("option", "dateFormat", "dd/mm/yy");
+
+
+        $("#datepicker_fin").datepicker({
+            format: 'dd/MM/yyyy'
+        });
+
+        $("#datepicker_fin").datepicker("option", "dateFormat", "dd/mm/yy");
+
+        function checkSelectedReport() {
+            var tipo_reporte_seleccionado = document.getElementById("ddl_reportes").value;
+            if (tipo_reporte_seleccionado == null || tipo_reporte_seleccionado == undefined || tipo_reporte_seleccionado == 0) {
+                document.getElementById("div_dynamic_report").innerHTML = "";
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalles del ticket</title>
+    <link rel="stylesheet" href="../css/receipt.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Libre+Barcode+128&family=Roboto&display=swap"
+        rel="stylesheet" />
+    <script type="text/javascript" src="../js/general.js"></script>
+</head>
+
+<body>
+    <article class="receipt flex-column">
+        <div class="table-container">
+            <table>
+                <tr>
+                    <td id="company-name">Surtidora El Precio Justo</td>
+                </tr>
+                <tr>
+                    <td id="company-address">Carrera 28A # 55-27 sur</td>
+                </tr>
+                <tr>
+                    <td id="company-city">Bogotá, Colombia</td>
+                </tr>
+                <tr>
+                    <td id="invoice-number">
+                        Factura # <span id="spn_ticket_no"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="invoice-number">
+                        <span id="spn_fecha_compra"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="invoice-number">
+                        Cajero: <span id="spn_cajero"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="receipt-details">
+            <div id="product_table"></div>
+        </div>
+        <div class="receipt-summary">
+            <table class="summary-table">
+                <tbody class="summary-table" id="total-summary">
+                    <tr>
+                        <td class="dotted-border" colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td class="empty-border" colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Subtotal:</strong></td>
+                        <td id="subtotal-summary">
+                            <div id="div_subtotal" class="div-subtotal"></div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="summary-table" id="payment-summary">
+                    <tr>
+                        <td class="dotted-border" colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td class="empty-border" colspan="2"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-container">
+            <table>
+                <tr>
+                    <td>
+                        <p id="receipt-message">¡Gracias por tu compra y<br />vuelve pronto!</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p id="barcode">Barcode</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </article>
+    <script type="text/javascript" src="../js/receipt_script.js"></script>
+</body>
+
+</html>

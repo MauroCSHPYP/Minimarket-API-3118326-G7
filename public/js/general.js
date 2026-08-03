@@ -123,6 +123,7 @@ function crear_menu() {
                 opciones_menu.push("Marcas|registrar detalle.html");
                 opciones_menu.push("Tipos de producto|tipo producto.html");
                 opciones_menu.push("Inventario|inventario.html");
+                opciones_menu.push("Reportes|reportes.html");
                 html_menu += agregar_lista_en_menu("Administrador ", opciones_menu);
 
                 opciones_menu = [];
