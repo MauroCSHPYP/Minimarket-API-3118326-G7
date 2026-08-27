@@ -145,7 +145,7 @@ module.exports = function (conexion) {
             CONTRASENA
         } = req.body;
 
-        // El orden de los placeholders en la SQL debe coincidir con el orden en el array de valores.
+        // El orden de los placeholders en la sentencia SQL debe coincidir con el orden en el array de valores.
         const update_sql = "UPDATE usuario SET NOMBRE = IFNULL(?, NOMBRE), APELLIDOS = IFNULL(?, APELLIDOS), FECHA_NACIMIENTO = IFNULL(?, FECHA_NACIMIENTO), ID_TIPO_DOCUMENTO = IFNULL(?, ID_TIPO_DOCUMENTO), ID_ROL = IFNULL(?, ID_ROL), NUMERO_IDENTIFICACION = IFNULL(?, NUMERO_IDENTIFICACION), ALIAS = IFNULL(?, ALIAS), CONTRASENA = IFNULL(?, CONTRASENA) WHERE ID_USUARIO = ?";
 
         // Array de valores, asegurando el orden correcto de los datos
@@ -182,7 +182,7 @@ module.exports = function (conexion) {
             else {
                 es_duplicado = fila[0].CONTEO;
 
-                if (es_duplicado == 0) {
+                if (es_duplicado <= 1) { // Para evitar que tenga que actualizar varias veces el 'NUMERO_IDENTIFICACION': 
                     conexion.query(update_sql, datos, function (error, resultado) {
 
                         if (error) {
@@ -314,6 +314,80 @@ module.exports = function (conexion) {
                 mensaje: msg,
                 user: user_found
             });
+        })
+    });
+
+    // Login - restablecer contraseña: 
+    ruta.put('/usuarios/login/reset_password', (req, res) => {
+
+        ID_USER = 0;
+
+        // Usamos la destructuración de req.body para mayor claridad:
+        let datosBody = {
+            NUMERO_IDENTIFICACION: req.body.NUMERO_IDENTIFICACION,
+            CONTRASENA: req.body.CONTRASENA
+        }
+
+        // El orden de los placeholders en la sentencia SQL debe coincidir con el orden en el array de valores.
+        const update_sql = "UPDATE usuario SET CONTRASENA = ? WHERE ID_USUARIO = ?";
+
+        const check_sql = 'SELECT ID_USUARIO FROM usuario WHERE UPPER(TRIM(NUMERO_IDENTIFICACION)) = UPPER(TRIM(?))';
+        var msg = "";
+
+        // Validación de duplicados: 
+        //console.log(datos);
+        conexion.query(check_sql, [datosBody.NUMERO_IDENTIFICACION], (error, fila) => {
+            if (error) {
+                msg = `Error al validar existencia del usuario`;
+                console.log(msg, error);
+
+                res.status(500).send({
+                    mensaje: msg,
+                    error: error.code
+                });
+                return;
+            }
+            else {
+
+                if (fila.length > 0) {
+                    ID_USER = fila[0].ID_USUARIO;
+
+                    conexion.query(update_sql, [datosBody.CONTRASENA, ID_USER], function (error, resultado) {
+
+                        if (error) {
+                            msg = `No se pudo restablecer la contraseña.`;
+                            console.error(msg, error);
+                            res.status(500).send({
+                                mensaje: msg,
+                                detalleError: error.code
+                            });
+                            return;
+                        }
+
+                        // 2. Validación de actualización de la contraseña: 
+                        if (resultado.affectedRows === 0) {
+                            // Error 404: Si la consulta no afectó ninguna fila, el ID no existe.
+                            msg = `No se encontró un usuario con este numéro de identificación.`;
+                            res.status(404).send({
+                                mensaje: msg
+                            });
+                        } else {
+                            msg = `Contraseña restablecida correctamente.`
+                            res.status(200).send({
+                                mensaje: msg,
+                                affectedRows: resultado.affectedRows
+                            });
+                        }
+                    });
+
+                } else {
+                    msg = `No existe un usuario con este número de identificación.`;
+                    res.status(404).send({
+                        mensaje: msg
+                    });
+                    return;
+                }
+            }
         })
     });
 

@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Página principal - Minimarket</title>
     <link rel="stylesheet" href="../css/style.css" />
+    <!-- Código de prueba - Datepicker - JQuery. -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://jqueryui.com/wp-content/themes/jqueryui.com/style.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -19,21 +22,17 @@
         <div class="topnav" id="myTopnav"></div>
         <div class="cuerpo">
             <h1>Minimarket</h1>
-            <h2>Registrar tipos de unidades</h2>
-            <form id="frmTipoUnidad">
-                <span id="spn_index_tu" style="display: none;"></span>
-                <span>Nombre:</span>
-                <input type="text" class="input-texto" id="txt_nombre_tu" maxlength="200" required /><br />
-                <button type="submit" class="boton-enviar" id="btn_registrar" title="Guardar cambios">Guardar</button>
+            <h2>Restablecer contraseña</h2>
+            <form id="frmResetPassword">
+                <span>Número de documento:</span>
+                <input type="text" class="input-texto" id="txt_numDoc" maxlength="255" required /><br /><br />
+                <span id="spn_contr">Contraseña:</span>
+                <input type="password" class="input-texto" id="txt_contrasena" maxlength="45" /><br /><br />
+                <span id="spn_confirm_contr">Confirmar contraseña:</span>
+                <input type="password" class="input-texto" id="txt_confirm_contrasena" maxlength="45" /><br />
+                <button type="submit" class="boton-enviar" id="btn_registrar" title="Restablecer contraseña">Restablecer</button>
             </form>
             <br />
-            <div id="div_dynamic_table_tu">
-                <h4>Tipos de unidad</h4>
-                <i>En esta sección se muestran los tipos de unidad disponibles para su asignación <br />
-                    a los <a href="tipo producto.html">tipos de producto</a> disponibles en la aplicación de
-                    Minimarket.</i>
-                <table id="tbl_tu"></table>
-            </div>
             <p class="texto parrafo">
                 Página en construcción - prototipo
             </p>
@@ -43,16 +42,18 @@
         <a href="#" id="link_contacto"></a>
     </footer>
     <script type="text/javascript" src="../js/general.js"></script>
-    <script type="text/javascript" src="../js/tipo_unidad_script.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/2.3.8/js/dataTables.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.css" />
+    <script type="text/javascript" src="../js/reset_password_script.js"></script>
     <!-- Fuente: https://stackoverflow.com/a/9899701/4092887 -->
     <script>
         (function () {
             document.getElementById("link_contacto").innerText = "Derechos reservados © (" + new Date().getFullYear() + ") - contáctenos";
-            comprobar_sesion();
-            recargar_tipos_unidades();
         })();
+
+        $("#datepicker").datepicker({
+            format: 'dd/MM/yyyy'
+        });
+
+        $("#datepicker").datepicker("option", "dateFormat", "dd/mm/yy");
     </script>
 </body>
 
