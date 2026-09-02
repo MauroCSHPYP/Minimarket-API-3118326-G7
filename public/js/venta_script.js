@@ -30,6 +30,18 @@ document.addEventListener('DOMContentLoaded', () => {
             msg += "- No hay productos a facturar." + text_break_line;
         }
 
+        // Validar si el producto puede ser vendido - para controlar excepción de actualización en inventario: 
+        try {
+            for (let ind_p = 0; ind_p < arr_prods_en_caja.length; ind_p++) {
+                if (arr_prods_en_caja[ind_p]["ID_INVENTARIO"] == null || arr_prods_en_caja[ind_p]["ID_INVENTARIO"] == undefined || arr_prods_en_caja[ind_p]["ID_INVENTARIO"] == 0) {
+                    msg += `- Producto (${arr_prods_en_caja[ind_p]["T_NOMBRE_PRODUCTO"].toUpperCase()}) no posee inventario.${text_break_line}`;
+                }
+            }
+        } catch (ex) {
+            msg += "No se pudo validar el producto seleccionado: " + text_break_line;
+            console.log(ex);
+        }
+
         if (msg.trim() != "") {
             mostrar_mensaje("Se han generado los siguientes errores: " + text_break_line + msg);
             return;
@@ -82,17 +94,20 @@ document.addEventListener('DOMContentLoaded', () => {
 async function limpiar_form_venta() {
     try {
         var empty = "";
-        var arr_campos_formulario_caja = ["txt_nombre_producto", "txt_cantidad", "txt_precio", "spn_index_producto", "spn_precio_producto"];
+        var arr_campos_formulario_caja = ["txt_nombre_producto", "txt_cantidad", "txt_precio", "spn_index_producto", "spn_precio_producto", "spn_prod_inv"];
 
         for (var i = 0; i < arr_campos_formulario_caja.length; i++) {
 
             switch (i) {
                 case 1:
-                    document.getElementById(arr_campos_formulario_caja[i]).value = "1";
+                    document.getElementById(arr_campos_formulario_caja[i]).value = "0";
                     break;
                 case 2:
                     document.getElementById("spn_precio_producto").value = empty;
                     document.getElementById(arr_campos_formulario_caja[i]).value = empty;
+                    break;
+                case 5:
+                    document.getElementById("spn_prod_inv").value = "0";
                     break;
                 default:
                     document.getElementById(arr_campos_formulario_caja[i]).value = empty;
@@ -125,13 +140,15 @@ function cancelar_venta() {
  * Estos son los productos que el cajero selecciona para crear la venta/factura/ticket.
  * NOTA: Crear otro endpoint para obtener los productos que estén en inventario : esto, para evitar error desde caja, pero, 
  * la causa del error es la falta de administración del inventario.
+ * 02/09/2026: Se agrega validación para controlar este error. En todo caso, el error es operativo. El administrador debe estar pendiente del inventario.
  * @returns async
  */
 async function cargar_productos() {
     try {
 
         // Variables: 
-        const API_URL_R_PRODUCTS = URL_BASE_APP + "productos";
+        //const API_URL_R_PRODUCTS = URL_BASE_APP + "productos"; // Todos los productos.
+        const API_URL_R_PRODUCTS = URL_BASE_APP + "inventarios"; // Inventario - para validar si puede hacer la venta.
 
         const response = await fetch(API_URL_R_PRODUCTS, {
             method: 'GET',
@@ -163,6 +180,7 @@ async function cargar_tabla_productos_en_caja() {
     // Variables: 
     var total_venta = 0;
     var arr_prods_en_caja = [];
+    var ds_products = [];
 
     try {
 
@@ -173,13 +191,28 @@ async function cargar_tabla_productos_en_caja() {
             arr_prods_en_caja = [];
         }
 
+        // Obtener los productos establecidos al ingresar a esta página: 
+        ds_products = JSON.parse(localStorage.getItem("productos_disponibles"));
+
         // Recorrer los productos en caja para calcular el total de la venta: 
         for (var i = 0; i < arr_prods_en_caja.length; i++) {
 
             // Total en caja: 
             try { total_venta += parseInt(arr_prods_en_caja[i]["PRECIO"]); }
             catch (ex) { }
+
+            // Actualizar ID_INVENTARIO - esto, cuando se recarga la página: 
+            for (var j = 0; j < ds_products.length; j++) {
+                if (ds_products[j]["ID_PRODUCTO"] == arr_prods_en_caja[i]["ID_ITEM"]) {
+                    arr_prods_en_caja[i]["ID_INVENTARIO"] = ds_products[j]["ID_INVENTARIO"];
+                    //console.log(arr_prods_en_caja[i]["T_NOMBRE_PRODUCTO"] + " + ID_PROD: " + arr_prods_en_caja[i]["ID_ITEM"] + " + " + " - INVENT: " + arr_prods_en_caja[i]["ID_INVENTARIO"] + " - ACTUALIZAR A: " + ds_products[j]["ID_INVENTARIO"]);
+                    break;
+                }
+            }
         }
+
+        // Consolidar la actualización de datos en la variable: 
+        localStorage.setItem("arr_prods_en_caja", JSON.stringify(arr_prods_en_caja));
 
         // Cargar el total calculado de la factura/venta/ticket y recargar la tabla de productos en caja: 
         document.getElementById("str_total").innerText = total_venta;
@@ -223,7 +256,8 @@ function agregar_producto_a_vender() {
             // Valores requeridos a enviar al endpoint: 
             CANTIDAD: document.getElementById("txt_cantidad").value,
             PRECIO: parseFloat(document.getElementById("txt_cantidad").value) * parseFloat(document.getElementById("spn_precio_producto").value),
-            ID_ITEM: document.getElementById("spn_index_producto").value
+            ID_ITEM: document.getElementById("spn_index_producto").value,
+            ID_INVENTARIO: document.getElementById("spn_prod_inv").value
         };
 
         // BUG: (Durante las pruebas), ha dejado agregar productos vacíos - lo cual es incorrecto. Con esta línea se resuelve el bug.
@@ -296,6 +330,7 @@ function seleccionar_producto(ind_producto) {
         document.getElementById("txt_precio").value = temp_prod_seleccionado["VALOR"];
         document.getElementById("spn_precio_producto").value = temp_prod_seleccionado["VALOR"];
         document.getElementById("spn_index_producto").value = temp_prod_seleccionado["ID_PRODUCTO"];
+        document.getElementById("spn_prod_inv").value = temp_prod_seleccionado["ID_INVENTARIO"];
 
         // Cerrar ventana modal: 
         var modal = document.getElementById("myModal");
