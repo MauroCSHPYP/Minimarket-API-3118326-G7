@@ -179,6 +179,7 @@ function load_dt_tipos_unidades() {
     // Configuración completa del DataTable: 
     // Source: https://datatables.net/examples/i18n/options.html
     new DataTable('#tbl_tu', {
+        responsive: true,
         searching: true,
         retrieve: true,
         ordering: true,

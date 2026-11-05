@@ -194,6 +194,7 @@ function load_dt_tipos_productos() {
     // Configuración completa del DataTable: 
     // Source: https://datatables.net/examples/i18n/options.html
     new DataTable('#tbl_tp', {
+        responsive: true,
         searching: true,
         retrieve: true,
         ordering: true,

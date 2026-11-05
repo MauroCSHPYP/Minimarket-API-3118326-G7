@@ -389,6 +389,7 @@ function load_dt_en_caja() {
     // Configuración completa del DataTable: 
     // Source: https://datatables.net/examples/i18n/options.html
     new DataTable('#tbl_productos_en_caja', {
+        responsive: true,
         searching: true,
         //lengthMenu: [5, 10, 15, 20],
         retrieve: true,
@@ -463,6 +464,10 @@ function load_dt_productos() {
     // Configuración completa del DataTable: 
     // Source: https://datatables.net/examples/i18n/options.html
     new DataTable('#tbl_productos_disponibles', {
+        responsive: true,
+        scrollCollapse: true,
+        scroller: true,
+        scrollY: 200,
         searching: true,
         lengthMenu: [5, 10, 15, 20],
         retrieve: true,

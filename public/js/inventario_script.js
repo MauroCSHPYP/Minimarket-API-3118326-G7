@@ -243,6 +243,10 @@ function load_dt_inventario_productos() {
     // Configuración completa del DataTable: 
     // Source: https://datatables.net/examples/i18n/options.html
     new DataTable('#tbl_dyn_productos', {
+        responsive: true,
+        scrollCollapse: true,
+        scroller: true,
+        scrollY: 200,
         searching: true,
         retrieve: true,
         ordering: true,
@@ -334,7 +338,7 @@ function load_dt_inventario_productos() {
         language: {
             decimal: "",
             emptyTable: "<strong>No hay productos disponibles</strong>",
-            info: "Mostrando página _PAGE_ de _PAGES_", // Showing _START_ to _END_ of _TOTAL_ entries
+            info: "Mostrando página _PAGE_ de _PAGES_", 
             infoEmpty: "No hay productos",
             infoFiltered: "(_TOTAL_ productos filtrados de _MAX_ registros totales)",
             infoPostFix: "",
